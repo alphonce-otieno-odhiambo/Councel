@@ -11,3 +11,13 @@ class CounselorProfile(models.Model):
     full_name = models.CharField(max_length=50)
     bio = models.CharField(max_length=300)
     profile_pic =CloudinaryField('image')
+
+    def _str_(self):
+        return f'{self.user.username} profile'
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+             CounselorProfile.objects.create(user=instance)
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
