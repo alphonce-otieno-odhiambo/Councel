@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'counsel_users.apps.CounselUsersConfig',
+    'counsel.'
 ]
 
 MIDDLEWARE = [
@@ -68,6 +72,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'councelproject.wsgi.application'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication', 
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
 
 
 # Database
