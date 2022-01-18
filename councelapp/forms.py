@@ -1,6 +1,6 @@
 from django.db.models import fields
 from django import forms
-from . models import *
+from .models import *
 
 class CounselorProfile(forms.ModelForm):
     class Meta:
