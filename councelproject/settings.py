@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'councelapp'
     'cloudinary',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
