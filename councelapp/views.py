@@ -14,7 +14,25 @@ from .forms import *
 from . models import *
 
 # Create your views here.
-class PofileView(viewsets.ModelViewSet):
+def counselprofile(request):
+    current_user = request.user
+    profile = CounselorProfile.objects.filter(user_id=current_user.id).first()           
+    return render(request, "profile/profile.html", {"profile": profile, })
+
+def update_profile(request,id):
+    user = User.objects.get(id=id)
+    profile = CounselorProfile.objects.get(user_id = user)
+    form = CounselorProfile(instance=profile)
+    if request.method == "POST":
+            form = CounselorProfile(request.POST,request.FILES,instance=profile)
+            if form.is_valid():
+                profile = form.save(commit=False)
+                profile.save()
+                return redirect('profile')
+    else:
+        form = CounselorProfile()
+    return render(request, 'profile/profile_form.html', {"form":form})
+class CounselorProfileView(viewsets.ModelViewSet):
     queryset = CounselorProfile.objects.all()
     serializer_class = CounselorProfileSerializer
     permission_class = (permissions.IsAuthenticatedOrReadOnly)
