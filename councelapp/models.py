@@ -11,6 +11,7 @@ class CounselorProfile(models.Model):
     full_name = models.CharField(max_length=50)
     bio = models.CharField(max_length=300)
     profile_pic =CloudinaryField('image')
+    
 
     def _str_(self):
         return f'{self.user.username} profile'
