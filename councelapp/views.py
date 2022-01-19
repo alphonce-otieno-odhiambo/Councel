@@ -56,3 +56,10 @@ class GroupsApi(APIView):
         all_groups = Group.objects.all()
         serializers = GroupSerializer(all_groups, many=True)
         return Response(serializers.data)
+
+    def post(self, request, format = None):
+        serializers = GroupSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
