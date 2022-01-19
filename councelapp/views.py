@@ -48,3 +48,8 @@ class ClientApi(APIView):
         client = self.get_client(pk)
         client.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class GroupsApi(APIView):
+    
