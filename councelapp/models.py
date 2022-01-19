@@ -10,3 +10,4 @@ class Client(models.Model):
     age = models.IntegerField()
     tel_no = models.IntegerField()
     groups = models.ForeignKey('Group', on_delete=models.CASCADE, null=True, related_name='groups', blank=True)
+    profile_picture = CloudinaryField(blank=True)
