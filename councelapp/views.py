@@ -9,3 +9,7 @@ from rest_framework import status
 
 # Create your views here.
 class ClientApi(APIView):
+    def get(self, request, format = None):
+        all_clients = Client.objects.all()
+        serializers = ClientSerializer(all_clients, many=True)
+        return Response(serializers.data)
