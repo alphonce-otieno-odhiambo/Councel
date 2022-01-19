@@ -66,4 +66,13 @@ class GroupsApi(APIView):
 
 
 class GroupApi(APIView):
-    
+    def get_group(self, pk):
+        try:
+            return Group.objects.get(pk=pk)
+        except Group.DoesNotExist:
+            return Http404
+
+    def get(self, request, pk, format = None):
+        group = self.get_group(pk)
+        serializers = GroupSerializer(group)
+        return Response(serializers.data)
