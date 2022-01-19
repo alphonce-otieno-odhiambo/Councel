@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import render, redirect, get_object_or_404
-from django.core.exceptions import ObjectDoesNotExist
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -12,12 +12,14 @@ from .serializers import *
 from django.http.response import JsonResponse
 from .forms import *
 from . models import *
-
+from rest_framework.response import Response
+from rest_framework import status
 # Create your views here.
 def counselprofile(request):
     current_user = request.user
+    data = {}
     profile = CounselorProfile.objects.filter(user_id=current_user.id).first()           
-    return render(request, "profile/profile.html", {"profile": profile, })
+    return Response(data,status = status.HTTP_200_OK)
 
 def update_profile(request,id):
     user = User.objects.get(id=id)
@@ -28,10 +30,13 @@ def update_profile(request,id):
             if form.is_valid():
                 profile = form.save(commit=False)
                 profile.save()
-                return redirect('profile')
+                data = {}
+                return Response(data,status = status.HTTP_200_OK)
     else:
         form = CounselorProfile()
-    return render(request, 'profile/profile_form.html', {"form":form})
+        data = {}
+        return Response(data,status = status.HTTP_200_OK)
+        
 class CounselorProfileView(viewsets.ModelViewSet):
     queryset = CounselorProfile.objects.all()
     serializer_class = CounselorProfileSerializer
