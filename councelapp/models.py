@@ -17,3 +17,6 @@ class Group(models.Model):
     counsellor = models.ForeignKey('Counsellor', on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     members = models.IntegerField()
+
+
+class Counsellor(models.Model):
