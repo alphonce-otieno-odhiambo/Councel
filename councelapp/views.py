@@ -44,4 +44,7 @@ class ClientApi(APIView):
         else:
             return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    
+    def delete(self, request, pk, format = None):
+        client = self.get_client(pk)
+        client.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
