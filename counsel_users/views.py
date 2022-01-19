@@ -16,6 +16,7 @@ def registration_view(request):
         return Response(data,status = status.HTTP_201_CREATED)
     else:
         data = serializer.errors
+        return Response(data,status=status.HTTP_400_BAD_REQUEST)
     
 
 @api_view(['DELETE'])
