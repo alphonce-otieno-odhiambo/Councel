@@ -3,6 +3,8 @@ from counsel_users import views as user_views
 from rest_framework.authtoken import views
 from rest_framework.authtoken import views as special_views
 
+from .views import *
+
 
 urlpatterns = [
     path('register',user_views.registration_view,name="register"),

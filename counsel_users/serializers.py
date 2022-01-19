@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from rest_framework.authtoken.models import Token
+
 
 from .models import Account
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    class meta:
+    class Meta:
         model = Account
         fields = ['email','password','username']
         extra_kwargs = {
