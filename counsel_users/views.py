@@ -11,10 +11,12 @@ def registration_view(request):
     
     serializer = RegistrationSerializer(data=request.data)
     data = {}
+
     if serializer.is_valid():
+        
         account = serializer.save()
         user = Account.objects.get(user=request.user)
-        user.counsellor = True
+        user.counsellor = False
         user.save()
         data['response'] = f"Successfully created a new user under {account.username}"
         return Response(data,status = status.HTTP_201_CREATED)
@@ -28,6 +30,9 @@ def counsellor_view(request):
     data = {}
     if serializer.is_valid():
         account = serializer.save()
+        user = Account.objects.get(user=request.user)
+        user.counsellor = True
+        user.save()
         data['response'] = f"New counsellor {account.username} successfully created"    
         return Response(data,status = status.HTTP_201_CREATED)
     else:
