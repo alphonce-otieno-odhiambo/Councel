@@ -52,4 +52,7 @@ class ClientApi(APIView):
 
 
 class GroupsApi(APIView):
-    
+    def get(self, request, format = None):
+        all_groups = Group.objects.all()
+        serializers = GroupSerializer(all_groups, many=True)
+        return Response(serializers.data)
