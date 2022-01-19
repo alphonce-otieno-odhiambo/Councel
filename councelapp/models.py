@@ -20,3 +20,8 @@ class Group(models.Model):
 
 
 class Counsellor(models.Model):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    description = models.TextField()
+    tel_no = models.IntegerField()
+    clients = models.ForeignKey('Client', on_delete=models.CASCADE,null=True, related_name='clients')
