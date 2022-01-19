@@ -15,6 +15,7 @@ def registration_view(request):
         account = serializer.save()
         user = Account.objects.get(user=request.user)
         user.counsellor = True
+        user.save()
         data['response'] = f"Successfully created a new user under {account.username}"
         return Response(data,status = status.HTTP_201_CREATED)
     else:
