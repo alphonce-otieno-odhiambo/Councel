@@ -17,7 +17,18 @@ def registration_view(request):
     else:
         data = serializer.errors
         return Response(data,status=status.HTTP_400_BAD_REQUEST)
-    
+        
+@api_view(['POST'])
+def counsellor_view(request):
+    serializer = RegistrationSerializer(data=request.data)
+    data = {}
+    if serializer.is_valid():
+        account = serializer.save()
+        data['response'] = f"New counsellor {account.username} successfully created"    
+        return Response(data,status = status.HTTP_201_CREATED)
+    else:
+        data = serializer.errors
+        return Response(data,status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
