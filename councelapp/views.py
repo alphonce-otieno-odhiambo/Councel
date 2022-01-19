@@ -34,3 +34,14 @@ class ClientApi(APIView):
         client = self.get_client(pk)
         serializers = ClientSerializer(client)
         return Response(serializers.data)
+
+    def put (self, request, pk, format = None):
+        client = self.get_client(pk)
+        serializers = ClientSerializer(client, request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
