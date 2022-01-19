@@ -24,3 +24,13 @@ class ClientsApi(APIView):
 
 
 class ClientApi(APIView):
+    def get_client(self, pk):
+        try:
+            return Client.objects.get(pk=pk)
+        except Client.DoesNotExist:
+            return Http404
+
+    def get(self, request, pk, format = None):
+        client = self.get_client(pk)
+        serializers = ClientSerializer(client)
+        return Response(serializers.data)
