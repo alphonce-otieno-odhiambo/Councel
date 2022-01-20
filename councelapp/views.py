@@ -11,6 +11,12 @@ import datetime
 from django.template import Context
 from django.template.loader import render_to_string, get_template
 
+from rest_framework import viewsets, permissions
+from .serializers import *
+from . models import *
+from rest_framework.response import Response
+from rest_framework import status
+
 
 # Create your views here.
 
@@ -102,6 +108,15 @@ class ManageAppointmentTemplateView(ListView):
             "title":"Manage Appointments"
         })
         return context
+
+
+
+
+# 
+class AppointmentView(viewsets.ModelViewSet):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+    permission_class = (permissions.IsAuthenticatedOrReadOnly)
 
 
 
