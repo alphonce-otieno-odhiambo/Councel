@@ -51,6 +51,9 @@ INSTALLED_APPS = [
     'councelapp',
     'cloudinary',
     'rest_framework',
+    'counsel_users',
+    
+    
 ]  
 
 MIDDLEWARE = [
@@ -62,7 +65,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'councelproject.urls'
 
@@ -84,23 +90,28 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'councelproject.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication', 
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'council',
-        'USER': 'alphonce',
-        'PASSWORD': 'alphonce',
-        'HOST': 'localhost'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+AUTH_USER_MODEL = 'counsel_users.Account'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
