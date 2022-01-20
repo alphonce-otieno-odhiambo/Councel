@@ -37,3 +37,8 @@ class CounselorProfileView(viewsets.ModelViewSet):
     queryset = CounselorProfile.objects.all()
     serializer_class = CounselorProfileSerializer
     permission_class = (permissions.IsAuthenticatedOrReadOnly)
+
+class CounselorView(viewsets.ModelViewSet):
+    queryset = Counselor.objects.all()
+    serializer_class = CounselorSerializer
+    permission_class = (permissions.IsAuthenticatedOrReadOnly)

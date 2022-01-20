@@ -5,7 +5,8 @@ from . import views as main_views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register('Councelor', views.CounselorProfileView),
+router.register('Councelorprofile', views.CounselorProfileView),
+router.register('Councelor', views.CounselorView),
 
 
 urlpatterns = [
