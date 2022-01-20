@@ -12,14 +12,26 @@ class Client(models.Model):
     groups = models.ForeignKey('Group', on_delete=models.CASCADE, null=True, related_name='groups', blank=True)
     profile_picture = CloudinaryField(blank=True)
 
+    def save(self):
+        self.save()
+
+    def __str__(self):
+        return self.first_name
+
 
 class Group(models.Model):
     counsellor = models.ForeignKey('Counsellor', on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     members = models.IntegerField()
 
+    def save(self):
+        self.save()
 
-class Counsellor(models.Model):
+    def __str__(self):
+        return self.name
+
+
+class Counselor(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     description = models.TextField()
