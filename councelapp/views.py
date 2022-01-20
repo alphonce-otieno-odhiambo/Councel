@@ -32,6 +32,12 @@ def update_profile(request,id):
         form = CounselorProfile()
         data = {}
         return Response(data,status = status.HTTP_200_OK)
+def counselor(request):
+    current_user = request.user
+    data = {}
+    counselordetails = Counselor.objects.filter(user_id=current_user.id).first()           
+    return Response(data,status = status.HTTP_200_OK)
+
         
 class CounselorProfileView(viewsets.ModelViewSet):
     queryset = CounselorProfile.objects.all()

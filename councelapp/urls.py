@@ -12,7 +12,8 @@ router.register('Councelor', views.CounselorView),
 urlpatterns = [
     
     path('counselprofile/', views.counselprofile, name='counselprofile'),
-    path('update_profile/<int:id>', views.update_profile, name = 'update_profile'),    
+    path('update_profile/<int:id>', views.update_profile, name = 'update_profile'),  
+    path('counselor/', views.counselor, name='counselor'),  
     
     path('api/', include(router.urls), name = 'api'),
 ]
