@@ -37,3 +37,9 @@ class Counselor(models.Model):
     description = models.TextField()
     tel_no = models.IntegerField()
     clients = models.ForeignKey('Client', on_delete=models.CASCADE,null=True, related_name='clients')
+
+    def save(self):
+        self.save()
+
+    def __str__(self):
+        return self.first_name
