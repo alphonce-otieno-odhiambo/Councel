@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Client, Group
+from .models import ClientProfile, Group
 from django.http import Http404, JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -11,7 +11,7 @@ from rest_framework import status
 # Create your views here.
 class ClientsApi(APIView):
     def get(self, request, format = None):
-        all_clients = Client.objects.all()
+        all_clients = ClientProfile.objects.all()
         serializers = ClientSerializer(all_clients, many=True)
         return Response(serializers.data)
 
@@ -26,8 +26,8 @@ class ClientsApi(APIView):
 class ClientApi(APIView):
     def get_client(self, pk):
         try:
-            return Client.objects.get(pk=pk)
-        except Client.DoesNotExist:
+            return ClientProfile.objects.get(pk=pk)
+        except ClientProfile.DoesNotExist:
             return Http404
 
     def get(self, request, pk, format = None):

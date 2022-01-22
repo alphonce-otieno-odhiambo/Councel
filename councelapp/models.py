@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 
 # Create your models here.
-class Client(models.Model):
+class ClientProfile(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     age = models.IntegerField()
@@ -20,9 +20,8 @@ class Client(models.Model):
 
 
 class Group(models.Model):
-    counsellor = models.ForeignKey('Counselor', on_delete=models.CASCADE)
+    counselor = models.ForeignKey('Counselor', on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
-    members = models.IntegerField()
 
     def save(self):
         self.save()
