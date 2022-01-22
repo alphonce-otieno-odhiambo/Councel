@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'counsel_users.apps.CounselUsersConfig',
+    'councelapp.apps.CouncelappConfig',
     'corsheaders',
 
 ]

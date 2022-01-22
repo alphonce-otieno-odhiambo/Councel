@@ -20,5 +20,6 @@ from django.urls.conf import include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api_auth',include('rest_framework.urls')),
-    path('accounts/',include('counsel_users.urls'))
+    path('accounts/',include('counsel_users.urls')),
+    path('counsultion/',include('councelapp.urls'))
 ]

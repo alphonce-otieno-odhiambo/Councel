@@ -1,4 +1,4 @@
-from tkinter import CASCADE
+from django.db.models.deletion import CASCADE, SET_NULL
 from django.db import models
 
 from counsel_users.models import Account
