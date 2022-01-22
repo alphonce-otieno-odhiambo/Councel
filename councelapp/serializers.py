@@ -1,3 +1,4 @@
+from statistics import quantiles
 from django.http import request
 from rest_framework import serializers
 from councelapp.models import Counsellor
@@ -12,4 +13,6 @@ class CounsellorSerializer(serializers.Serializer):
         fields = ['first_name','last_name','qualities','work_experience']
 
     def save(self,request):
-        counsellor = Counsellor(account= request.user,first_name=self.validated_data['first_name'],last_name = self.validated_data['last_name'])
+        counsellor = Counsellor(account= request.user,first_name=self.validated_data['first_name'],last_name = self.validated_data['last_name'],qualities = self.validated_data['qualities'],work_experience = self.validated_data['work_experience'])
+        counsellor.save()
+        return counsellor 
