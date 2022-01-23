@@ -10,3 +10,7 @@ class CounselorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model =Counselor
         fields = ("id", "url", "user","first_name","last_name", "experience","qualities")
+class AppointmentSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = ("id", "url","first_name", "last_name","email","phone","request","sent_date", "accepted","accepted_date")

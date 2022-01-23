@@ -10,11 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-from pathlib import Path
+
 import os
 import cloudinary
+
+
 import cloudinary.uploader
 import cloudinary.api
+from pathlib import Path
+
+
 
 #add configs
 cloudinary.config( 
@@ -38,6 +43,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# cloudinary
+
+
 
 # Application definition
 
@@ -52,10 +60,15 @@ INSTALLED_APPS = [
     'cloudinary',
     'rest_framework',
     'counsel_users',
+    'cloudinary_storage',
+    'django_filters',
     
     
 ]  
-
+    
+    
+    
+  
 MIDDLEWARE = [
     
     'django.middleware.security.SecurityMiddleware',
