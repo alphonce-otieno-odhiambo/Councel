@@ -17,6 +17,7 @@ from django.views.generic import ListView
 import datetime
 from django.template import Context
 from django.template.loader import render_to_string, get_template
+from rest_framework.decorators import api_view
 
 
 
@@ -25,12 +26,14 @@ from rest_framework import status
 
 
 # Create your views here.
+@api_view(['GET'])
 def counselprofile(request):
+
     current_user = request.user
     data = {}
     profile = CounselorProfile.objects.filter(user_id=current_user.id).first()           
     return Response(data,status = status.HTTP_200_OK)
-
+@api_view(['POST'])
 def update_profile(request,id):
     user = User.objects.get(id=id)
     profile = CounselorProfile.objects.get(user_id = user)
@@ -46,6 +49,7 @@ def update_profile(request,id):
         form = CounselorProfile()
         data = {}
         return Response(data,status = status.HTTP_200_OK)
+@api_view(['GET'])
 def counselor(request):
     current_user = request.user
     data = {}
@@ -62,7 +66,7 @@ class CounselorView(viewsets.ModelViewSet):
     queryset = Counselor.objects.all()
     serializer_class = CounselorSerializer
     permission_class = (permissions.IsAuthenticatedOrReadOnly)
-
+@api_view(['POST'])
 class HomeTemplateView(TemplateView):
     template_name = "index.html"
     
@@ -82,6 +86,7 @@ class HomeTemplateView(TemplateView):
         return HttpResponse("Email sent successfully!")
 
 # appointment
+@api_view(['POST'])
 class AppointmentTemplateView(TemplateView):
     template_name = "appointment.html"
 

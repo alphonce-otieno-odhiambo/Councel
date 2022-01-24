@@ -52,3 +52,14 @@ class Appointment(models.Model):
     
     class Meta:
         ordering = ["-sent_date"]
+
+# Prescription Models
+class Prescription(models.Model):
+    prid=models.AutoField(primary_key=True)
+    clients = models.ForeignKey('ClientProfile', on_delete=models.CASCADE,null=True, related_name='clients')
+    counselor = models.OneToOneField('Counselor', on_delete=models.CASCADE, related_name='counselor')
+    prescription=models.TextField()
+    diagnosis=models.CharField(max_length=25)
+    date=models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return f'{self.prid}'
