@@ -10,13 +10,32 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+<<<<<<< HEAD
 from pathlib import Path
 from decouple import config,Csv
 import django_heroku
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+=======
+
+>>>>>>> 52a8cbf5739635a8242bd7fb971bde20a939a1b5
 import os
+import cloudinary
+
+
+import cloudinary.uploader
+import cloudinary.api
+from pathlib import Path
+
+
+
+#add configs
+cloudinary.config( 
+  cloud_name = "dfjzhunea", 
+  api_key = "496876264173179", 
+  api_secret = "2YhR8CrDSWWxTzAaAf-kE5Jpm6o" 
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,6 +52,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# cloudinary
+
+
 
 # Application definition
 
@@ -43,18 +65,26 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 52a8cbf5739635a8242bd7fb971bde20a939a1b5
     'councelapp',
     'cloudinary',
     'rest_framework',
-    'rest_framework.authtoken',
-    'counsel_users.apps.CounselUsersConfig',
-    'corsheaders',
-
-]
-
+    'counsel_users',
+    'cloudinary_storage',
+    'django_filters',
+    
+    
+]  
+    
+    
+    
+  
 MIDDLEWARE = [
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,7 +92,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -110,6 +140,7 @@ DATABASES = {
     }
 }
 
+<<<<<<< HEAD
 
 # Cloudinary for images
 
@@ -120,6 +151,8 @@ cloudinary.config(
 )
 
 
+=======
+>>>>>>> 52a8cbf5739635a8242bd7fb971bde20a939a1b5
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 AUTH_USER_MODEL = 'counsel_users.Account'
@@ -157,13 +190,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+
 STATIC_URL = '/static/'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, 'static')
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# configuring the location for media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR , 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
+}

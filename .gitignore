@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -129,3 +130,6 @@ dmypy.json
 .pyre/
 
 cnsl/
+=======
+virtual/
+>>>>>>> 52a8cbf5739635a8242bd7fb971bde20a939a1b5

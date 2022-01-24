@@ -8,16 +8,20 @@ from .models import Account
 
 @api_view(['POST'])
 def registration_view(request):
+    
     serializer = RegistrationSerializer(data=request.data)
     data = {}
     if serializer.is_valid():
         account = serializer.save()
+        user = Account.objects.get(user=request.user)
+        user.counsellor = True
+        user.save()
         data['response'] = f"Successfully created a new user under {account.username}"
         return Response(data,status = status.HTTP_201_CREATED)
     else:
         data = serializer.errors
         return Response(data,status=status.HTTP_400_BAD_REQUEST)
-        
+
 @api_view(['POST'])
 def counsellor_view(request):
     serializer = RegistrationSerializer(data=request.data)
