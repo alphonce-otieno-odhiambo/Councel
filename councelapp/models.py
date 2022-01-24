@@ -1,6 +1,7 @@
 from django.db import models
 import datetime as dt
 from django.contrib.auth.models import User
+from counsel_users.models import Account
 from cloudinary.models import CloudinaryField
 
 # Create your models here.
@@ -31,9 +32,11 @@ class Group(models.Model):
 
 
 class Counselor(models.Model):
+    user = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='profile')
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    description = models.TextField()
+    experience = models.CharField(max_length=200)
+    qualities = models.TextField(max_length=200)
     tel_no = models.IntegerField()
     clients = models.ForeignKey('ClientProfile', on_delete=models.CASCADE,null=True, related_name='clients')
 
