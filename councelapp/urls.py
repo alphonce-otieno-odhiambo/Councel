@@ -6,7 +6,7 @@ from rest_framework import routers
 from .views import HomeTemplateView, AppointmentTemplateView, ManageAppointmentTemplateView
 
 router = routers.DefaultRouter()
-router.register('Councelorprofile', views.CounselorProfileView),
+router.register('Councelorprofile', views.CounselorProfView),
 router.register('Councelor', views.CounselorView),
 router.register('Appointment', views.AppointmentView),
 

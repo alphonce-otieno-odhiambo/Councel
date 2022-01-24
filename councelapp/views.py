@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.test import Client
+# from django.test import Client
 from rest_framework import viewsets, permissions
 from .serializers import *
 from .forms import *
@@ -59,7 +59,7 @@ def counselor(request):
     return Response(data,status = status.HTTP_200_OK)
 
         
-class CounselorProfileView(viewsets.ModelViewSet):
+class CounselorProfView(viewsets.ModelViewSet):
     queryset = CounselorProfile.objects.all()
     serializer_class = CounselorProfileSerializer
     permission_class = (permissions.IsAuthenticatedOrReadOnly)
@@ -68,6 +68,7 @@ class CounselorView(viewsets.ModelViewSet):
     queryset = Counselor.objects.all()
     serializer_class = CounselorSerializer
     permission_class = (permissions.IsAuthenticatedOrReadOnly)
+    
 @api_view(['POST'])
 class HomeTemplateView(TemplateView):
     template_name = "index.html"
@@ -164,28 +165,28 @@ class ManageAppointmentTemplateView(ListView):
 @api_view(['POST'])
 @login_required(login_url="/accounts/login/")
 def addpres(request):
-    cons=Counselor.objects.filter(user=request.user).first()
-    clnt=Client.objects.all()
+    #cons=Counselor.objects.filter(user=request.user).first()
+    # clnt=Client.objects.all()
     if request.method=='POST':
         patname=request.POST['pat']
         pres=request.POST['pres']
         us=User.objects.filter(first_name=patname).first()
-        clnt=Client.objects.filter(user=us).first()
+        # clnt=Client.objects.filter(user=us).first()
         diag=request.POST['diag']
-        prescript=Prescription(prescription=pres,client=clnt,counselor=cons,diagnosis=diag)
+        prescript=Prescription(prescription=pres,diagnosis=diag)
         prescript.save()
         return redirect("showpres")
-    return render(request,'prescriptions/addpres.html',{'clnt':clnt})
+    return render(request,'prescriptions/addpres.html',)
     # show prescription
 @api_view(['GET'])
 def showpres(request):
     pre=Prescription.objects.all()
     return render(request,'prescriptions/showpres.html',{'pre':pre})
     # show medical history
-@api_view(['GET'])
-def showmedhis(request):
-    cons=Client.objects.filter(user=request.user).first()
-    pre=Prescription.objects.filter(client=cons).all()
+# @api_view(['GET'])
+# def showmedhis(request):
+#     cons=Client.objects.filter(user=request.user).first()
+#     pre=Prescription.objects.filter(client=cons).all()
 
 # 
 class AppointmentView(viewsets.ModelViewSet):
