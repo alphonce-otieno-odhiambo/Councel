@@ -2,7 +2,7 @@ from django.db import models
 from counsel_users.models import Account
 from django.dispatch import receiver
 from django.db.models.signals import post_save,post_delete
-from cloudinary import CloudinaryField
+from cloudinary.models import CloudinaryField
 from django.utils import timezone
 from django.http import request
 # Create your models here.

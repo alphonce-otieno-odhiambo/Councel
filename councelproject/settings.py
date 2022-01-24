@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'counsel_users',
     'cloudinary_storage',
-    'django_filters',
+    
     
     
 ]  
