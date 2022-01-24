@@ -1,6 +1,7 @@
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
+from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.core.mail import EmailMessage, message
 from django.conf import settings
@@ -16,6 +17,13 @@ from .serializers import *
 from . models import *
 from rest_framework.response import Response
 from rest_framework import status
+
+
+from django.views.generic import UpdateView
+from django.views.generic import DeleteView
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 # Create your views here.
@@ -111,12 +119,68 @@ class ManageAppointmentTemplateView(ListView):
 
 
 
-
 # 
 class AppointmentView(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
     permission_class = (permissions.IsAuthenticatedOrReadOnly)
+
+
+
+
+# 
+class AppointmentEdit(UpdateView):
+	model = Appointment
+	template_name = "appointment_form.html"
+	success_url = reverse_lazy('appointment_list')
+	fields = '__all__'
+	def get_object(self, queryset=None):
+		obj = super(AppointmentEdit, self).get_object()
+		return obj
+
+appointment_edit = AppointmentEdit.as_view()
+
+class AppointmentDelete(DeleteView):
+	model = Appointment
+	template_name = "appointment_delete.html"
+	success_url = reverse_lazy('appointment_list')
+	def get_object(self, queryset=None):
+		obj = super(AppointmentDelete, self).get_object()
+		return obj
+
+appointment_delete = AppointmentDelete.as_view()
+
+
+# Prescription
+
+    # add prescription
+@login_required(login_url="/accounts/login/")
+def addpres(request):
+    doc=Doctor.objects.filter(user=request.user).first()
+    p=Patient.objects.all()
+    if request.method=='POST':
+        patname=request.POST['pat']
+        pres=request.POST['pres']
+        us=User.objects.filter(first_name=patname).first()
+        pat=Patient.objects.filter(user=us).first()
+        dis=request.POST['dis']
+        prescript=Prescription(prescription=pres,patient=pat,doctor=doc,disease=dis)
+        prescript.save()
+        return redirect("showpres")
+    return render(request,'prescriptions/addpres.html',{'p':p})
+
+    # show prescription
+@login_required(login_url="/accounts/login/")
+def showpres(request):
+    pre=Prescription.objects.all()
+    return render(request,'prescriptions/showpres.html',{'pre':pre})
+
+    # show medical history
+@login_required(login_url="/accounts/login/")
+def showmedhis(request):
+    doc=Patient.objects.filter(user=request.user).first()
+    pre=Prescription.objects.filter(patient=doc).all()
+    return render(request,'prescriptions/showmedhis.html',{'pre':pre})
 
 
 
