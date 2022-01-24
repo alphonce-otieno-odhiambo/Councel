@@ -40,7 +40,7 @@ class MyAccountManager(BaseUserManager):
 
         user.save(using=self._db)
         return user
-    
+
 class Account(PermissionsMixin,AbstractBaseUser):
     """This will define the custom user model to be used
     Args:

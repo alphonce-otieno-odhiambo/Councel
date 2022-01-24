@@ -52,12 +52,35 @@ class Appointment(models.Model):
     
     class Meta:
         ordering = ["-sent_date"]
+class Group(models.Model):
+    counselor = models.ForeignKey('Counselor', on_delete=models.CASCADE)
+    name = models.CharField(max_length=30)
+
+    def save(self):
+        self.save()
+
+    def _str_(self):
+        return self.name
+
+class ClientProfile(models.Model):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    age = models.IntegerField()
+    tel_no = models.IntegerField()
+    groups = models.ForeignKey('Group', on_delete=models.CASCADE, null=True, related_name='groups', blank=True)
+    profile_picture = CloudinaryField(blank=True)
+
+    def save(self):
+        self.save()
+
+    def _str_(self):
+        return self.first_name
 
 # Prescription Models
 class Prescription(models.Model):
     prid=models.AutoField(primary_key=True)
     clients = models.ForeignKey('ClientProfile', on_delete=models.CASCADE,null=True, related_name='clients')
-    counselor = models.OneToOneField('Counselor', on_delete=models.CASCADE, related_name='counselor')
+    counsel = models.OneToOneField('Counselor', on_delete=models.CASCADE, related_name='counsel')
     prescription=models.TextField()
     diagnosis=models.CharField(max_length=25)
     date=models.DateTimeField(default=timezone.now)

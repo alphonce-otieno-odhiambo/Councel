@@ -17,4 +17,15 @@ class AppointmentSerializer(serializers.HyperlinkedModelSerializer):
 class PrescriptionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Prescription
-        fields = ("id", "url","prid", "clients","counselor","prescription","diagnosis","date")
+        fields = ("id", "url","prid", "clients","counsel","prescription","diagnosis","date")
+
+class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Group
+        fields = ("id", "url","counselor", "name")
+
+class ClientProfileSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ClientProfile
+        fields = ("id", "url","first_name", "last_name","age","tel_no","profile_picture")
+        
