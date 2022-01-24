@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import HomeTemplateView, AppointmentTemplateView, ManageAppointmentTemplateView
+from .views import *
 from rest_framework import routers
 from . import views
 
@@ -18,5 +18,10 @@ urlpatterns = [
 
     path('api/', include(router.urls), name = 'api'),
 
+    path('addpres/',views.addpres,name='addpres'),
+    path('showpres/',views.showpres,name='showpres'),
+    path('showmedhis/',views.showmedhis,name='showmedhis'),
+
+    
 
 ]
