@@ -5,10 +5,25 @@ from . import views as main_views
 from rest_framework import routers
 from .views import HomeTemplateView, AppointmentTemplateView, ManageAppointmentTemplateView
 
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path,re_path
+from . import views
+
+
+
 router = routers.DefaultRouter()
 router.register('Councelorprofile', views.CounselorProfileView),
 router.register('Councelor', views.CounselorView),
 router.register('Appointment', views.AppointmentView),
+
+
+urlpatterns=[
+    path('clients/', views.ClientsApi.as_view()),
+    path('groups/', views.GroupsApi.as_view()),
+    re_path(r'^client/client-id/(?P<pk>[0-9]+)$', views.ClientApi.as_view()),
+    re_path(r'^group/group-id/(?P<pk>[0-9]+)$', views.GroupApi.as_view()),
+]
 
 
 urlpatterns = [
@@ -24,7 +39,3 @@ urlpatterns = [
 
     path('api/', include(router.urls), name = 'api'),
 ]
-
-
-
-

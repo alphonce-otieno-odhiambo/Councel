@@ -10,7 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+<<<<<<< HEAD
+from pathlib import Path
+from decouple import config,Csv
+import django_heroku
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+=======
 
+>>>>>>> 52a8cbf5739635a8242bd7fb971bde20a939a1b5
 import os
 import cloudinary
 
@@ -56,6 +65,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> 52a8cbf5739635a8242bd7fb971bde20a939a1b5
     'councelapp',
     'cloudinary',
     'rest_framework',
@@ -117,11 +131,28 @@ REST_FRAMEWORK = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': '',
     }
 }
 
+<<<<<<< HEAD
+
+# Cloudinary for images
+
+cloudinary.config(
+    cloud_name =config('CLOUD_NAME'),
+    api_key=config('CLOUD_API_KEY'), 
+    api_secret=config('API_SECRET'),
+)
+
+
+=======
+>>>>>>> 52a8cbf5739635a8242bd7fb971bde20a939a1b5
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 AUTH_USER_MODEL = 'counsel_users.Account'
