@@ -46,6 +46,22 @@ class AppointmentsUpcomingView(ListView):
 			counsellee_archived=False)
 
 
+class AppointmentsRequestedView(ListView):
+	model = Appointment
+	template_name = 'client/appointments_requested.html'
+	context_object_name = 'appointments'
+	paginate_by = 5 
+
+	def get_queryset(self):
+		client = self.request.user.counsellee
+		return Appointment.objects.filter(
+			client=client).filter(
+			requested=True).filter(
+			fixed=False).filter(
+			held=False).filter(
+			client_archived=False)
+
+
 
 # Prescription
 
