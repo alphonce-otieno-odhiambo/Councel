@@ -54,7 +54,7 @@ def update_profile(request,id):
 def counselor(request):
     current_user = request.user
     data = {}
-    counselordetails = Counselor.objects.filter(user_id=current_user.id).first()           
+    counselordetails = Counsellor.objects.filter(user_id=current_user.id).first()           
     return Response(data,status = status.HTTP_200_OK)
 
         
@@ -156,7 +156,7 @@ class ManageAppointmentTemplateView(ListView):
 @api_view(['POST'])
 @login_required(login_url="/accounts/login/")
 def addpres(request):
-    cons=Counselor.objects.filter(user=request.user).first()
+    cons=Counsellor.objects.filter(user=request.user).first()
     clnt=ClientProfile.objects.all()
     if request.method=='POST':
         patname=request.POST['pat']
@@ -196,7 +196,7 @@ class CounselorProfView(viewsets.ModelViewSet):
     permission_class = (permissions.IsAuthenticatedOrReadOnly)
 
 class CounselorView(viewsets.ModelViewSet):
-    queryset = Counselor.objects.all()
+    queryset = Counsellor.objects.all()
     serializer_class = CounselorSerializer
     permission_class = (permissions.IsAuthenticatedOrReadOnly)
 
