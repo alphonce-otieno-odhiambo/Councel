@@ -20,10 +20,7 @@ class CounsellorProfileSerializer(serializers.ModelSerializer):
         model = Counsellor
         fields = '__all__'
 
-class CounselorSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model =Counsellor
-        fields = ("id", "url", "user","first_name","last_name", "experience","qualities")
+
 class AppointmentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Appointment
@@ -33,10 +30,27 @@ class PrescriptionSerializer(serializers.HyperlinkedModelSerializer):
         model = Prescription
         fields = ("id", "url","prid", "clients","counsel","prescription","diagnosis","date")
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+class GroupSerializer(serializers.Serializer):
+    user = UserSerializers(read_only=True)
     class Meta:
         model = Group
-        fields = ("id", "url","counselor", "name")
+        fields = '__all__'
+
+    def save(self,request):
+        group = Group(name=self.validated_data['name'],admin=request.user,bio=self.validated_data['bio'])
+        group.save()
+
+    class GetGroupSerializer(serializers.ModelSerializer):
+        """This deals with parsing the neighbourhood model
+        Args:
+            serializers ([type]): [description]
+        """
+    admin = UserSerializers()
+   
+    class Meta:
+        model = Group
+        fields = '__all__'
+        read_only_fields = ['admin']
 
 class ClientProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
