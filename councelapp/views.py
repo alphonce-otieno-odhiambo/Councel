@@ -30,7 +30,40 @@ def CounsellorView(request):
         data['response'] = 'There is no counsellor registered under those credentials'
         return Response(data,status=status.HTTP_404_NOT_FOUND)
     
-    
+@api_view(['GET'])   
+def counsellor_profile(request):
+    data = {}
+    profile = Counsellor.objects.get(user = request.user)
+    print(profile.user.date_joined)
+    data =  CounsellorProfileSerializer(profile).data
+    return Response(data,status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+def profile(request):
+    data = {}
+    profile = Counsellor.objects.get(user = request.user)
+    print(profile.user.date_joined)
+    data =  CounsellorProfileSerializer(profile).data
+    return Response(data,status = status.HTTP_200_OK)
 
 
+@api_view(['POST','GET'])
+def counsellor_group_view(request):
+    data = {}
+
+    if request.method == 'POST':
+        serializer = GroupSerializer(data=request.data)
+        if serializer.is_valid:
+            serializer.save(request)
+            data['success'] = "The group has been created successfully"
+            return Response(data,status = status.HTTP_201_CREATED)
+        else:
+            serializer.errors
+            return Response(data,status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'GET':
+        groups = Group.objects.filter(group__admin = request.user)
+        data = GetGroupSerializer(groups,many=True).data
+
+        return Response(data,status = status.HTTP_200_OK)
 
