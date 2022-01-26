@@ -93,3 +93,17 @@ class Appointment(models.Model):
     
     class Meta:
         ordering = ["-sent_date"]
+
+
+class Counselling(models.Model):
+	counsellor = models.ForeignKey(Counselor, on_delete=models.CASCADE, null=True)
+	counsellee = models.ForeignKey(ClientProfile, on_delete=models.CASCADE, null=True)
+	date_contacted = models.DateField(default=timezone.now)
+
+	def __str__(self):
+		return f'{self.counsellor.user.username} and {self.counsellee.user.username}'
+
+	class Meta:
+		verbose_name = 'Connection'
+		verbose_name_plural = 'Connections'
+		ordering = ['-date_contacted',]
