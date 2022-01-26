@@ -115,3 +115,15 @@ class Conversation(models.Model):
 
 	def __str__(self):
 		return f"{self.counsellee.user.username} and {self.counsellee.user.username}'s Conversation"
+
+
+class Message(models.Model):
+	conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, null=True)
+	text = models.TextField(null=True)
+	time = models.DateTimeField(default=timezone.now, null=True)
+
+	def __str__(self):
+		return f"{self.conversation}"
+
+	class Meta:
+		ordering = ['-time',]
