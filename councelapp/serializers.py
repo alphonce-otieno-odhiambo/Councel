@@ -21,6 +21,12 @@ class GroupSerializer(serializers.ModelSerializer):
         group.save()
 
 
+class ConversationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Conversation
+        fields = '__all__'
+
+
 class GetGroupSerializer(serializers.ModelSerializer):
     admin = UserSerializers()
    
