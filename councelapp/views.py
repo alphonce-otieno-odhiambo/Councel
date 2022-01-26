@@ -7,30 +7,25 @@ from .serializers import *
 from .forms import *
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
-from .models import ClientProfile, Group
+from .models import *
 from django.http import Http404, JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.response import Response 
 from rest_framework.views import APIView
-from .serializers import ClientSerializer, GroupSerializer
+from rest_framework.decorators import api_view
 from rest_framework import status
 
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
 from django.core.mail import EmailMessage, message
 from django.conf import settings
-from django.contrib import messages
-from .models import Appointment
 from django.views.generic import ListView
 import datetime
 from django.template import Context
 from django.template.loader import render_to_string, get_template
 
 
-
-from rest_framework.response import Response
-from rest_framework import status
 
 # Create your views here.
 class ClientsApi(APIView):

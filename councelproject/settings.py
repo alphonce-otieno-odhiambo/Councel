@@ -10,23 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-<<<<<<< HEAD
 from pathlib import Path
 from decouple import config,Csv
 import django_heroku
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-=======
-
->>>>>>> 52a8cbf5739635a8242bd7fb971bde20a939a1b5
 import os
-import cloudinary
-
-
-import cloudinary.uploader
-import cloudinary.api
-from pathlib import Path
 
 
 
@@ -52,7 +42,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# cloudinary
 
 
 
@@ -65,11 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 52a8cbf5739635a8242bd7fb971bde20a939a1b5
     'councelapp',
     'cloudinary',
     'rest_framework',
@@ -140,7 +125,6 @@ DATABASES = {
     }
 }
 
-<<<<<<< HEAD
 
 # Cloudinary for images
 
@@ -151,8 +135,6 @@ cloudinary.config(
 )
 
 
-=======
->>>>>>> 52a8cbf5739635a8242bd7fb971bde20a939a1b5
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 AUTH_USER_MODEL = 'counsel_users.Account'
