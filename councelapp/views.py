@@ -1,6 +1,6 @@
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.test import Client
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
@@ -26,77 +26,55 @@ from django.views.generic import DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
+from rest_framework.views import APIView
+
 
 # Create your views here.
+# GET
+class AppointmentsAPI(APIView):
+    def get (self, request, format=None):
+        all_appointments = Appointment.objects.all()
+        serializers = AppointmentSerializer(all_appointments, many=True)
+        return Response(serializers.data)
 
-# Appointment Lists (upcoming, requested, held, archived)
-class AppointmentsUpcomingView(ListView):
-	model = Appointment
-	template_name = 'client/appointments_upcoming.html'
-	context_object_name = 'appointments'
-	paginate_by = 5 
+# POST
+    def post (self, request, format=None):
+        serializers = AppointmentSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
-	def get_queryset(self):
-		client = self.request.user.client
-		return Appointment.objects.filter(
-			counsellee=client).filter(
-			requested=True).filter(
-			fixed=True).filter(
-			held=False).filter(
-			counsellee_archived=False)
-
-
-class AppointmentsRequestedView(ListView):
-	model = Appointment
-	template_name = 'client/appointments_requested.html'
-	context_object_name = 'appointments'
-	paginate_by = 5 
-
-	def get_queryset(self):
-		client = self.request.user.counsellee
-		return Appointment.objects.filter(
-			client=client).filter(
-			requested=True).filter(
-			fixed=False).filter(
-			held=False).filter(
-			client_archived=False)
-
-class AppointmentsArchivedView(ListView):
-	model = Appointment
-	template_name = 'counsellees/appointments_archived.html'
-	context_object_name = 'appointments'
-	paginate_by = 5 
-
-	def get_queryset(self):
-		counsellee = self.request.user.counsellee
-		return Appointment.objects.filter(
-			counsellee=counsellee).filter(
-			counsellee_archived=True)
+# single appointment
+class AppointmentAPI(APIView):
+    def get_appointment(self,pk):
+        try : 
+            return Appointment.objects.get(pk=pk)
+        except Appointment.DoesNotExist:
+            return Http404
 
 
-# General Appointment Views (create, detail, edit, delete)
-def appointment_create(request, pk):
-	counsellee = request.user.counsellee
-	counsellor = Counsellor.objects.get(pk=pk)
-	if request.method == 'POST':
-		form = AppointmentCreateForm(request.POST)
-		if form.is_valid():			
-			appointment = form.save(commit=False)
-			appointment.counsellee = counsellee
-			appointment.counsellor = counsellor
-			appointment.save()
-			# record contacted status
-			if not Counselling.objects.filter(counsellor=counsellor, counsellee=counsellee).exists():
-				new_record = Counselling(counsellor = counsellor, counsellee = counsellee) 
-				new_record.save()
-			
-			messages.success(request, f'Appointment requested successfully!')
-			return redirect('counsellee-appointments-requested')
-	else:
-		form = AppointmentCreateForm()
-	context = {'form': form}
-	return render(request, 'counsellees/appointment_create.html', context)
+    def get(self,request,pk,format=None):
+        appointment = self.get_appointment(pk)
+        serializers= AppointmentSerializer(appointment)
+        return Response(serializers.data)
 
+        # update
+    def put(self,request,pk,format=None):
+        appointment = self.get_appointment(pk)
+        serializers = AppointmentSerializer(appointment, request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response (serializers.data)
+        else : 
+            return  Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+            # delete
+    def delete (self,request,pk,format=None):
+        appointment = self.get_appointment(pk)
+        appointment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
