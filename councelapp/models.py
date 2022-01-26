@@ -1,14 +1,11 @@
 from django.db import models
-import datetime as dt
-from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 
 from counsel_users.models import Account
 from django.dispatch import receiver
-from django.db.models.signals import post_save,post_delete
+from django.db.models.signals import post_save
 from django.utils import timezone
 from django.db.models.deletion import CASCADE, SET_NULL
-from django.http import request
 
 # Create your models here.
 class ClientProfile(models.Model):
