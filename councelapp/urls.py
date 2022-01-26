@@ -27,7 +27,7 @@ urlpatterns = [
     #path("manage-appointments/", ManageAppointmentTemplateView.as_view(), name="manage"),
     path('addpres/',views.addpres,name='addpres'),
     path('showpres/',views.showpres,name='showpres'),
-    #path('showmedhis/',views.showmedhis,name='showmedhis'),
+    path('showmedhis/',views.showmedhis,name='showmedhis'),
     path('api/', include(router.urls), name = 'api'),
 ]
 

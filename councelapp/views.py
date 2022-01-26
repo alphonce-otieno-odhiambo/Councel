@@ -62,7 +62,7 @@ def counselor(request):
     
 @api_view(['POST'])
 class HomeTemplateView(TemplateView):
-    template_name = "index.html"
+    
     
     def post(self, request):
         name = request.POST.get("name")
