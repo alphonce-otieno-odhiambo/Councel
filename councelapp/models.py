@@ -4,7 +4,8 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save,post_delete
 from cloudinary.models import CloudinaryField
 from django.utils import timezone
-from django.http import request
+
+from counsel_users.serializers import UserSerializers
 # Create your models here.
 
 class Details(models.Model):
@@ -17,6 +18,18 @@ class Details(models.Model):
 class Counselor(models.Model):
     user = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='profile')
     details = models.ForeignKey(Details,on_delete=models.CASCADE,null=True,related_name='user')
+
+    def __str__(self):
+        return self.user.username + "'s " + "profile"
+
+    @receiver(post_save, sender=Account)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Counselor.objects.create(user=instance)
+
+    @receiver(post_save, sender=Account)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
 
 class CounselorProfile(models.Model):
     counselor = models.OneToOneField(Counselor, on_delete=models.CASCADE, related_name='counselor')
