@@ -1,16 +1,15 @@
 
 from django.db import models
 from django.http import request
-from django.utils import timezone
+
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
-# from accounts.models import Patient,Doctor
 
 
-from django.db import models
+
 from django.utils import timezone
 from django.urls import reverse
-from users.models import Counsellor, Client
+
 
 
 

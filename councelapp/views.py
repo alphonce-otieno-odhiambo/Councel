@@ -61,6 +61,43 @@ class AppointmentsRequestedView(ListView):
 			held=False).filter(
 			client_archived=False)
 
+class AppointmentsArchivedView(ListView):
+	model = Appointment
+	template_name = 'counsellees/appointments_archived.html'
+	context_object_name = 'appointments'
+	paginate_by = 5 
+
+	def get_queryset(self):
+		counsellee = self.request.user.counsellee
+		return Appointment.objects.filter(
+			counsellee=counsellee).filter(
+			counsellee_archived=True)
+
+
+# General Appointment Views (create, detail, edit, delete)
+def appointment_create(request, pk):
+	counsellee = request.user.counsellee
+	counsellor = Counsellor.objects.get(pk=pk)
+	if request.method == 'POST':
+		form = AppointmentCreateForm(request.POST)
+		if form.is_valid():			
+			appointment = form.save(commit=False)
+			appointment.counsellee = counsellee
+			appointment.counsellor = counsellor
+			appointment.save()
+			# record contacted status
+			if not Counselling.objects.filter(counsellor=counsellor, counsellee=counsellee).exists():
+				new_record = Counselling(counsellor = counsellor, counsellee = counsellee) 
+				new_record.save()
+			
+			messages.success(request, f'Appointment requested successfully!')
+			return redirect('counsellee-appointments-requested')
+	else:
+		form = AppointmentCreateForm()
+	context = {'form': form}
+	return render(request, 'counsellees/appointment_create.html', context)
+
+
 
 
 # Prescription
