@@ -41,7 +41,7 @@ class Group(models.Model):
         return self.name
 
 
-class Counselor(models.Model):
+class Counsellor(models.Model):
     user = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='profile')
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -57,7 +57,7 @@ class Counselor(models.Model):
         return self.first_name
 
 class CounselorProfile(models.Model):
-    counselor = models.OneToOneField(Counselor, on_delete=models.CASCADE, related_name='counselor')
+    counselor = models.OneToOneField(Counsellor, on_delete=models.CASCADE, related_name='counselor')
     
     bio = models.CharField(max_length=300)
     
@@ -96,8 +96,8 @@ class Appointment(models.Model):
 
 
 class Counselling(models.Model):
-	counsellor = models.ForeignKey(Counselor, on_delete=models.CASCADE, null=True)
-	counsellee = models.ForeignKey(ClientProfile, on_delete=models.CASCADE, null=True)
+	counsellor = models.ForeignKey(Counsellor, on_delete=models.CASCADE, null=True)
+	client = models.ForeignKey(ClientProfile, on_delete=models.CASCADE, null=True)
 	date_contacted = models.DateField(default=timezone.now)
 
 	def __str__(self):
@@ -107,3 +107,11 @@ class Counselling(models.Model):
 		verbose_name = 'Connection'
 		verbose_name_plural = 'Connections'
 		ordering = ['-date_contacted',]
+
+
+class Conversation(models.Model):
+	counsellee = models.ForeignKey(ClientProfile, on_delete=models.CASCADE, null=True)
+	counsellor = models.ForeignKey(Counsellor, on_delete=models.CASCADE, null=True)
+
+	def __str__(self):
+		return f"{self.counsellee.user.username} and {self.counsellee.user.username}'s Conversation"
