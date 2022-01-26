@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import *
 from counsel_users.serializers import UserSerializers
 
-class CounselorSerializer(serializers.Serializer):
+class CounsellorSerializer(serializers.Serializer):
     account = UserSerializers(read_only=True)
     class Meta:
         model = Details
@@ -13,10 +13,12 @@ class CounselorSerializer(serializers.Serializer):
         counsellor.save()
         return counsellor 
 
-class CounselorProfileSerializer(serializers.HyperlinkedModelSerializer):
+class CounsellorProfileSerializer(serializers.ModelSerializer):
+    details = CounsellorSerializer(read_only=True)
+    user = UserSerializers(read_only=True)
     class Meta:
-        model = CounselorProfile
-        fields = ("id", "url","counselor", "bio","profile_pic")
+        model = Counsellor
+        fields = '__all__'
 
 class CounselorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
