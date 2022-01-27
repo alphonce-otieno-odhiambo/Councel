@@ -87,9 +87,8 @@ class Appointment(models.Model):
     class Meta:
         ordering = ["-sent_date"]
 class Group(models.Model):
-    name = models.CharField(max_length=300,unique=True,null=True) 
-    admin = models.OneToOneField(Account,on_delete=SET_NULL,null=True)
-    bio = models.TextField(null=True)
+    counselor = models.ForeignKey('Counselor', on_delete=models.CASCADE)
+    name = models.CharField(max_length=30)
 
     def save(self):
         self.save()
