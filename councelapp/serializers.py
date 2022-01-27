@@ -26,11 +26,7 @@ class AppointmentSerializer(serializers.HyperlinkedModelSerializer):
         model = Appointment
         fields = '__all__'
 
-        
-class PrescriptionSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Prescription
-        fields = ("id", "url","prid", "clients","counsel","prescription","diagnosis","date")
+
 
 class GroupSerializer(serializers.Serializer):
     user = UserSerializers(read_only=True)
@@ -43,7 +39,7 @@ class GroupSerializer(serializers.Serializer):
         group.save()
 
     class GetGroupSerializer(serializers.ModelSerializer):
-        """This deals with parsing the neighbourhood model
+        """This deals with parsing the clients model
         Args:
             serializers ([type]): [description]
         """
@@ -55,6 +51,7 @@ class GroupSerializer(serializers.Serializer):
         read_only_fields = ['admin']
 
 class ClientProfileSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializers(read_only=True)
     class Meta:
         model = ClientProfile
         fields = ("id", "url","first_name", "last_name","age","tel_no","profile_picture")
