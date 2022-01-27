@@ -19,6 +19,7 @@ from django.template import Context
 from django.template.loader import render_to_string, get_template
 from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
+from rest_framework.views import APIView
 
 
 
@@ -81,28 +82,19 @@ class HomeTemplateView(TemplateView):
 
 # appointment
 @api_view(['POST'])
-class AppointmentTemplateView(TemplateView):
-    def post(self, request):
-        fname = request.POST.get("fname")
-        lname = request.POST.get("fname")
-        email = request.POST.get("email")
-        mobile = request.POST.get("mobile")
-        message = request.POST.get("request")
+class AppointmentsAPI(APIView):
+    def get (self, request, format=None):
+        all_appointments = Appointment.objects.all()
+        serializers = AppointmentSerializer(all_appointments, many=True)
+        return Response(serializers.data)
 
-        appointment = Appointment.objects.create(
-            first_name=fname,
-            last_name=lname,
-            email=email,
-            phone=mobile,
-            request=message,
-        )
-
-        appointment.save()
-
-        messages.add_message(request, messages.SUCCESS, f"Thanks {fname} for making an appointment, we will email you ASAP!")
-        return HttpResponseRedirect(request.path)
-
-
+# POST
+    def post (self, request, format=None):
+        serializers = AppointmentSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # manageappointment
 @api_view(['POST'])
