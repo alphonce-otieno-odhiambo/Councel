@@ -97,18 +97,21 @@ class Group(models.Model):
         return self.name
 
 class ClientProfile(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    age = models.IntegerField()
-    tel_no = models.IntegerField()
-    groups = models.ForeignKey('Group', on_delete=models.CASCADE, null=True, related_name='groups', blank=True)
-    profile_picture = CloudinaryField(blank=True)
-
-    def save(self):
-        self.save()
+    user = models.OneToOneField(Account,null=False,on_delete=CASCADE,related_name="client_profile")
+    counsellor = models.ForeignKey('Counselor',null=True,blank=True,on_delete=models.SET_NULL,related_name="counsellor")
 
     def _str_(self):
-        return self.first_name
+        return self.user.username + "'s " + "profile"
+
+    @receiver(post_save, sender=Account)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            ClientProfile.objects.create(user=instance)
+
+    @receiver(post_save, sender=Account)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
+
 
 # Prescription Models
 class Prescription(models.Model):
