@@ -107,6 +107,25 @@ class Counselling(models.Model):
 	class Meta:
 		ordering = ['-date_contacted',]
 
+class Conversation(models.Model):
+	client = models.ForeignKey(ClientProfile, on_delete=models.CASCADE, null=True)
+	counsellor = models.ForeignKey(Counsellor, on_delete=models.CASCADE, null=True)
+
+	def _str_(self):
+		return f"{self.client.user.username} and {self.counsellor.user.username}'s Conversation"
+
+
+class Message(models.Model):
+	conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, null=True)
+	text = models.TextField(null=True)
+	time = models.DateTimeField(default=timezone.now, null=True)
+
+	def _str_(self):
+		return f"{self.conversation}"
+
+	class Meta:
+		ordering = ['-time',]
+
 # Prescription Models
 class Prescription(models.Model):
     prid=models.AutoField(primary_key=True)
