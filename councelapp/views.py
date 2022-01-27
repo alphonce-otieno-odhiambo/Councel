@@ -104,3 +104,17 @@ class GroupApi(APIView):
         group = self.get_group(pk)
         group.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class CounsellingApi(APIView):
+    def get_counselling(self, pk):
+        try:
+            return Counselling.objects.get(pk=pk)
+        except Counselling.DoesNotExist:
+            return Http404
+
+    def get(self, request, pk, format = None):
+        counselling = self.get_counselling(pk)
+        serializers = CounsellingSerializer(counselling)
+        return Response(serializers.data)
