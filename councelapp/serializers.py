@@ -50,6 +50,17 @@ class GroupSerializer(serializers.Serializer):
         fields = '__all__'
         read_only_fields = ['admin']
 
+class ClientSerializer(serializers.Serializer):
+    account = UserSerializers(read_only=True)
+    class Meta:
+        model = Client
+        fields = '__all__'
+
+    def save(self,request):
+        client = Client(user= request.user,counsellor=self.validated_data['counsellor'])
+        client.save()
+        return client 
+
 class ClientProfileSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializers(read_only=True)
     class Meta:
