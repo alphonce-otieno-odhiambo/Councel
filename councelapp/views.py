@@ -20,6 +20,7 @@ from django.template.loader import render_to_string, get_template
 from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
 from rest_framework.views import APIView
+from django.http import Http404, HttpResponse
 
 
 
@@ -140,6 +141,36 @@ class ManageAppointmentTemplateView(ListView):
             "title":"Manage Appointments"
         })
         return context
+class AppointmentAPI(APIView):
+    def get_appointment(self,pk):
+        try : 
+            return Appointment.objects.get(pk=pk)
+        except Appointment.DoesNotExist:
+            return Http404
+
+
+    def get(self,request,pk,format=None):
+        appointment = self.get_appointment(pk)
+        serializers= AppointmentSerializer(appointment)
+        return Response(serializers.data)
+
+        # update
+    def put(self,request,pk,format=None):
+        appointment = self.get_appointment(pk)
+        serializers = AppointmentSerializer(appointment, request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response (serializers.data)
+        else : 
+            return  Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+            # delete
+    def delete (self,request,pk,format=None):
+        appointment = self.get_appointment(pk)
+        appointment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
  # add prescription
