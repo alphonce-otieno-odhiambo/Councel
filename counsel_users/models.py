@@ -40,6 +40,18 @@ class MyAccountManager(BaseUserManager):
 
         user.save(using=self._db)
         return user
+
+    def create_counsellor(self,email,username,password=None):
+        user = self.model(
+            email = self.normalize_email(email),
+            username = username,
+            password = password
+        )
+        user.set_password(password)
+        user.is_counsellor = True
+        user.save(using=self._db)
+        return user
+        
     
 class Account(PermissionsMixin,AbstractBaseUser):
     """This will define the custom user model to be used
@@ -55,7 +67,7 @@ class Account(PermissionsMixin,AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_counsellor = models.BooleanField(default=False)
-
+    
     objects = MyAccountManager()
 
     USERNAME_FIELD = 'email'

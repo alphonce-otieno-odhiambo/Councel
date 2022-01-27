@@ -24,7 +24,8 @@ def registration_view(request):
 def counsellor_view(request):
     serializer = CounsellorRegistrationSerializer(data=request.data)
     data = {}
-    if serializer.is_valid():
+
+    if serializer.is_valid(): 
         account = serializer.save()
         data['response'] = f"New counsellor {account.username} successfully created"    
         return Response(data,status = status.HTTP_201_CREATED)

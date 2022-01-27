@@ -4,6 +4,8 @@ from django.db.models.deletion import CASCADE, SET_NULL
 from django.db import models
 
 from counsel_users.models import Account
+counsellor = Account.objects.filter(is_counsellor=True)
+client = Account.objects.filter(is_counsellor=False)
 
 class Details(models.Model):
     owner = models.OneToOneField(Account,on_delete=CASCADE,)
@@ -13,7 +15,7 @@ class Details(models.Model):
     experiences = models.TextField(null=True)
 
 class Counsellor(models.Model):
-    user = models.OneToOneField(Account,null=False,on_delete=CASCADE,related_name="profile")
+    user = models.OneToOneField(Account(counsellor),null=False,on_delete=CASCADE,related_name="profile")
     details = models.ForeignKey(Details,on_delete=CASCADE,null=True,related_name='user')
     
     def __str__(self):
@@ -35,7 +37,7 @@ class Group(models.Model):
 
 
 class Client(models.Model):
-    user = models.OneToOneField(Account,null=False,on_delete=CASCADE,related_name="client_profile")
+    user = models.OneToOneField(Account(client),null=False,on_delete=CASCADE,related_name="client_profile")
     counsellor = models.ForeignKey(Counsellor,null=True,blank=True,on_delete=models.SET_NULL,related_name="counsellor")
 
     def __str__(self):

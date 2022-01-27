@@ -42,3 +42,10 @@ class GetGroupSerializer(serializers.ModelSerializer):
         model = Group
         fields = '__all__'
         read_only_fields = ['admin']
+
+class ClientProfileSerializer(serializers.ModelSerializer):
+    counsellor = CounsellorProfileSerializer(read_only=True)
+    user = UserSerializers(read_only=True)
+    class Meta:
+        model = Counsellor
+        fields = '__all__'
