@@ -69,7 +69,7 @@ class Client(models.Model):
 
 class ClientProfile(models.Model):
     user = models.OneToOneField(Account,null=False,on_delete=CASCADE,related_name="client_profile")
-    counsellor = models.ForeignKey('Counselor',null=True,blank=True,on_delete=models.SET_NULL,related_name="counsellor")
+    counsellor = models.ForeignKey('Counsellor',null=True,blank=True,on_delete=models.SET_NULL,related_name="counsellor")
 
     def _str_(self):
         return self.user.username + "'s " + "profile"

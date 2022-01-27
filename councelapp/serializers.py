@@ -65,5 +65,9 @@ class ClientProfileSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializers(read_only=True)
     class Meta:
         model = ClientProfile
-        fields = ("id", "url","first_name", "last_name","age","tel_no","profile_picture")
-        
+        fields = '__all__'
+
+class CounsellingSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Counselling
+        fields = ["id","url","counsellor","client","date_contacted"]
