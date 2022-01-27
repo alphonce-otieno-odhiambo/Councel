@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'councelapp',
     'cloudinary',
     'rest_framework',
+    'rest_framework.authtoken',
     'counsel_users',
     'cloudinary_storage',
     'django_filters',

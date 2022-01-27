@@ -3,6 +3,26 @@ from .models import ClientProfile, Group
 from .models import *
 from counsel_users.serializers import UserSerializers
 
+from counsel_users.serializers import UserSerializers
+
+class CounsellorSerializer(serializers.Serializer):
+    account = UserSerializers(read_only=True)
+    class Meta:
+        model = Counsellor
+        fields = ['first_name','last_name','qualities','work_experience']
+
+    def save(self,request):
+        counsellor = Counsellor(account= request.user,first_name=self.validated_data['first_name'],last_name = self.validated_data['last_name'],qualities = self.validated_data['qualities'],work_experience = self.validated_data['work_experience'])
+        counsellor.save()
+        return counsellor 
+
+class CounsellorProfileSerializer(serializers.ModelSerializer):
+    details = CounsellorSerializer(read_only=True)
+    user = UserSerializers(read_only=True)
+    class Meta:
+        model = Counsellor
+        fields = '__all__'
+
 class ClientSerializer(serializers.ModelSerializer):
     groups = serializers.PrimaryKeyRelatedField(many=True, queryset=Group.objects.all())
     class Meta:
