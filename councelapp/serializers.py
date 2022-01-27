@@ -22,6 +22,7 @@ class CounsellorProfileSerializer(serializers.ModelSerializer):
 
 
 class AppointmentSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializers(read_only=True)
     class Meta:
         model = Appointment
         fields = '__all__'
