@@ -71,3 +71,8 @@ class CounsellingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Counselling
         fields = ["id","url","counsellor","client","date_contacted"]
+
+class ConversationSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Conversation
+        fields = ["id","url","counsellor","client"]
