@@ -9,7 +9,7 @@ class CounsellorSerializer(serializers.Serializer):
         fields = '__all__'
 
     def save(self,request):
-        counsellor = Counsellor(account= request.user,first_name=self.validated_data['first_name'],last_name = self.validated_data['last_name'],qualities = self.validated_data['qualities'],work_experience = self.validated_data['work_experience'])
+        counsellor = Counsellor(account= request.user,first_name=self.validated_data['first_name'],last_name = self.validated_data['last_name'],qualities = self.validated_data['qualities'],work_experience = self.validated_data['experience'])
         counsellor.save()
         return counsellor 
 
@@ -24,7 +24,9 @@ class CounsellorProfileSerializer(serializers.ModelSerializer):
 class AppointmentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Appointment
-        fields = ("id", "url","first_name", "last_name","email","phone","request","sent_date", "accepted","accepted_date")
+        fields = '__all__'
+
+        
 class PrescriptionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Prescription
