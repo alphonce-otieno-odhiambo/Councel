@@ -5,33 +5,27 @@ from django.db.models.signals import post_save,post_delete
 from cloudinary.models import CloudinaryField
 from django.utils import timezone
 from django.db.models.deletion import CASCADE, SET_NULL
+from django.http import request
 
 
 from counsel_users.serializers import UserSerializers
 # Create your models here.
 
-class Details(models.Model):
-    owner = models.OneToOneField(Account,on_delete=models.CASCADE,)
-    first_name = models.CharField(max_length=100,null=True)
-    last_name = models.CharField(max_length=100,null=True)
-    quantiles = models.TextField(null=True)
-    experiences = models.TextField(null=True)
-
 class Counsellor(models.Model):
     user = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='profile')
-    details = models.ForeignKey(Details,on_delete=models.CASCADE,null=True,related_name='user')
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    experience = models.CharField(max_length=200)
+    qualities = models.TextField(max_length=200)
+    tel_no = models.IntegerField()
+    clients = models.ForeignKey('ClientProfile', on_delete=models.CASCADE,null=True, related_name='clients')
 
-    def __str__(self):
-        return self.user.username + "'s " + "profile"
+    def save(self):
+        self.save()
 
-    @receiver(post_save, sender=Account)
-    def create_user_profile(sender, instance, created, **kwargs):
-        if created:
-         Counsellor.objects.create(user=instance)
+    def _str_(self):
+        return self.first_name
 
-    @receiver(post_save, sender=Account)
-    def save_user_profile(sender, instance, **kwargs):
-        instance.profile.save()
 
 class CounselorProfile(models.Model):
     counselor = models.OneToOneField(Counsellor, on_delete=models.CASCADE, related_name='counselor')
@@ -41,7 +35,7 @@ class CounselorProfile(models.Model):
     profile_pic =CloudinaryField('image')
 
 
-    def _str_(self):
+    def str(self):
         return f'{self.user.username} profile'
     @receiver(post_save, sender=Account)
     def create_user_profile(sender, instance, created, **kwargs):
@@ -101,6 +95,17 @@ class Group(models.Model):
 
     def _str_(self):
         return self.name
+
+class Counselling(models.Model):
+	counsellor = models.ForeignKey(Counsellor, on_delete=models.CASCADE, null=True)
+	client = models.ForeignKey(ClientProfile, on_delete=models.CASCADE, null=True)
+	date_contacted = models.DateField(default=timezone.now)
+
+	def _str_(self):
+		return f'{self.counsellor.user.username} and {self.client.user.username}'
+
+	class Meta:
+		ordering = ['-date_contacted',]
 
 # Prescription Models
 class Prescription(models.Model):
