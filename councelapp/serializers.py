@@ -5,8 +5,8 @@ from counsel_users.serializers import UserSerializers
 class CounsellorSerializer(serializers.Serializer):
     account = UserSerializers(read_only=True)
     class Meta:
-        model = Details
-        fields = ['first_name','last_name','qualities','work_experience']
+        model = Counsellor
+        fields = '__all__'
 
     def save(self,request):
         counsellor = Counsellor(account= request.user,first_name=self.validated_data['first_name'],last_name = self.validated_data['last_name'],qualities = self.validated_data['qualities'],work_experience = self.validated_data['work_experience'])
