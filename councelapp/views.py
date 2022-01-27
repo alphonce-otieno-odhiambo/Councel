@@ -1,38 +1,91 @@
-
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from rest_framework import viewsets, permissions
 from .serializers import *
 from .forms import *
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import render
-from .models import ClientProfile, Group
+from .models import *
 from django.http import Http404, JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.response import Response 
 from rest_framework.views import APIView
-from .serializers import ClientSerializer, GroupSerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
 from django.core.mail import EmailMessage, message
-from django.conf import settings
-from django.contrib import messages
-from .models import Appointment
 from django.views.generic import ListView
-import datetime
 from django.template import Context
-from django.template.loader import render_to_string, get_template
 
-
-
-from rest_framework.response import Response
-from rest_framework import status
+from counsel_users.models import Account
 
 # Create your views here.
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def CounsellorView(request):
+    serializer = CounsellorSerializer(data = request.data)
+    account = Account.objects.get(user=request.user)
+    data = {}
+    
+    if account.is_counsellor == True:
+        if serializer.is_valid():
+            serializer.save()
+            data['response'] = f'Additional details for {account.username} successfully added'
+            return Response(data,status = status.HTTP_201_CREATED)
+        else:
+            data = serializer.errors
+            return Response(data,status=status.HTTP_400_BAD_REQUEST)
+    if account.is_counsellor == False:
+        data['response'] = 'There is no counsellor registered under those credentials'
+        return Response(data,status=status.HTTP_404_NOT_FOUND)
+    
+    else:
+        data['response'] = 'There is no counsellor registered under those credentials'
+        return Response(data,status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['GET'])   
+def counsellor_profile(request):
+    data = {}
+    profile = Counsellor.objects.get(user = request.user)
+    print(profile.user.date_joined)
+    data =  CounsellorProfileSerializer(profile).data
+    return Response(data,status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+def profile(request):
+    data = {}
+    profile = Counsellor.objects.get(user = request.user)
+    print(profile.user.date_joined)
+    data =  CounsellorProfileSerializer(profile).data
+    return Response(data,status = status.HTTP_200_OK)
+
+
+@api_view(['POST','GET'])
+def counsellor_group_view(request):
+    data = {}
+
+    if request.method == 'POST':
+        serializer = GroupSerializer(data=request.data)
+        if serializer.is_valid:
+            serializer.save(request)
+            data['success'] = "The group has been created successfully"
+            return Response(data,status = status.HTTP_201_CREATED)
+        else:
+            serializer.errors
+            return Response(data,status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'GET':
+        groups = Group.objects.filter(group__admin = request.user)
+        data = GetGroupSerializer(groups,many=True).data
+
+        return Response(data,status = status.HTTP_200_OK)
+
+
 class ClientsApi(APIView):
     def get(self, request, format = None):
         all_clients = ClientProfile.objects.all()
@@ -117,140 +170,28 @@ class GroupApi(APIView):
 
 
 
+class CounsellingApi(APIView):
+    def get_counselling(self, pk):
+        try:
+            return Counselling.objects.get(pk=pk)
+        except Counselling.DoesNotExist:
+            return Http404
 
-# Create your views here.
-def counselprofile(request):
-    current_user = request.user
-    data = {}
-    profile = CounselorProfile.objects.filter(user_id=current_user.id).first()           
-    return Response(data,status = status.HTTP_200_OK)
+    def get(self, request, pk, format = None):
+        counselling = self.get_counselling(pk)
+        serializers = CounsellingSerializer(counselling)
+        return Response(serializers.data)
 
-def update_profile(request,id):
-    user = User.objects.get(id=id)
-    profile = CounselorProfile.objects.get(user_id = user)
-    form = CounselorProfile(instance=profile)
-    if request.method == "POST":
-            form = CounselorProfile(request.POST,request.FILES,instance=profile)
-            if form.is_valid():
-                profile = form.save(commit=False)
-                profile.save()
-                data = {}
-                return Response(data,status = status.HTTP_200_OK)
-    else:
-        form = CounselorProfile()
-        data = {}
-        return Response(data,status = status.HTTP_200_OK)
-def counselor(request):
-    current_user = request.user
-    data = {}
-    counselordetails = Counselor.objects.filter(user_id=current_user.id).first()           
-    return Response(data,status = status.HTTP_200_OK)
+    def put (self, request, pk, format = None):
+        counselling = self.get_counselling(pk)
+        serializers = CounsellingSerializer(counselling, request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        
-class CounselorProfileView(viewsets.ModelViewSet):
-    queryset = CounselorProfile.objects.all()
-    serializer_class = CounselorProfileSerializer
-    permission_class = (permissions.IsAuthenticatedOrReadOnly)
-
-class CounselorView(viewsets.ModelViewSet):
-    queryset = Counselor.objects.all()
-    serializer_class = CounselorSerializer
-    permission_class = (permissions.IsAuthenticatedOrReadOnly)
-
-class HomeTemplateView(TemplateView):
-    template_name = "index.html"
-    
-    def post(self, request):
-        name = request.POST.get("name")
-        email = request.POST.get("email")
-        message = request.POST.get("message")
-
-        email = EmailMessage(
-            subject= f"{name} from counsellor.",
-            body=message,
-            from_email=settings.EMAIL_HOST_USER,
-            to=[settings.EMAIL_HOST_USER],
-            reply_to=[email]
-        )
-        email.send()
-        return HttpResponse("Email sent successfully!")
-
-# appointment
-class AppointmentTemplateView(TemplateView):
-    template_name = "appointment.html"
-
-    def post(self, request):
-        fname = request.POST.get("fname")
-        lname = request.POST.get("fname")
-        email = request.POST.get("email")
-        mobile = request.POST.get("mobile")
-        message = request.POST.get("request")
-
-        appointment = Appointment.objects.create(
-            first_name=fname,
-            last_name=lname,
-            email=email,
-            phone=mobile,
-            request=message,
-        )
-
-        appointment.save()
-
-        messages.add_message(request, messages.SUCCESS, f"Thanks {fname} for making an appointment, we will email you ASAP!")
-        return HttpResponseRedirect(request.path)
-
-
-
-# manageappointment
-
-class ManageAppointmentTemplateView(ListView):
-    template_name = "manage-appointments.html"
-    model = Appointment
-    context_object_name = "appointments"
-    login_required = True
-    paginate_by = 3
-
-
-    def post(self, request):
-        date = request.POST.get("date")
-        appointment_id = request.POST.get("appointment-id")
-        appointment = Appointment.objects.get(id=appointment_id)
-        appointment.accepted = True
-        appointment.accepted_date = datetime.datetime.now()
-        appointment.save()
-
-        data = {
-            "fname":appointment.first_name,
-            "date":date,
-        }
-
-        message = get_template('email.html').render(data)
-        email = EmailMessage(
-            "About your appointment",
-            message,
-            settings.EMAIL_HOST_USER,
-            [appointment.email],
-        )
-        email.content_subtype = "html"
-        email.send()
-
-        messages.add_message(request, messages.SUCCESS, f"You accepted the appointment of {appointment.first_name}")
-        return HttpResponseRedirect(request.path)
-
-
-    def get_context_data(self,*args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        appointments = Appointment.objects.all()
-        context.update({   
-            "title":"Manage Appointments"
-        })
-        return context
-
-
-
-
-# 
-class AppointmentView(viewsets.ModelViewSet):
-    queryset = Appointment.objects.all()
-    serializer_class = AppointmentSerializer
-    permission_class = (permissions.IsAuthenticatedOrReadOnly)
+    def delete(self, request, pk, format = None):
+        counselling = self.get_counselling(pk)
+        counselling.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
