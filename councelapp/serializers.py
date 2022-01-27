@@ -33,6 +33,12 @@ class MessageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CounsellingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Counselling
+        fields = '__all__'
+
+
 class GetGroupSerializer(serializers.ModelSerializer):
     admin = UserSerializers()
    
