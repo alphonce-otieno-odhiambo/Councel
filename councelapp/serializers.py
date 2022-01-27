@@ -76,3 +76,9 @@ class ConversationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Conversation
         fields = ["id","url","counsellor","client"]
+
+
+class MessageSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Conversation
+        fields = ["id","url","conversation","text","time"]
