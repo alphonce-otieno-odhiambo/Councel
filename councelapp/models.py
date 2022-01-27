@@ -126,13 +126,38 @@ class Message(models.Model):
 	class Meta:
 		ordering = ['-time',]
 
+class Appointment(models.Model):
+	TYPE = (
+		('first', 'First appointment'),
+		('follow-up', 'Follow-up appointment'),
+		('final', 'Final appointment'),
+	)
+	description = models.CharField('Short Description', max_length=256, null=True, blank=True)
+	client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)
+	counsellor = models.ForeignKey(Counsellor, on_delete=models.CASCADE, null=True)
+	time = models.DateField('Appointment Date')
+	appointment_type = models.CharField('Appointment Type', max_length=20, choices=TYPE, null=True)
+	requested = models.BooleanField(default=True)
+	fixed = models.BooleanField('fix appointment?', default=False)
+	held = models.BooleanField('appointment held?', default=False)
+	remarks = models.TextField(null=True, blank=True)
+	recommendations = models.TextField(null=True, blank=True)
+	counsellee_archived = models.BooleanField(default=False)
+	counsellor_archived = models.BooleanField(default=False)
+	
+	def __str__(self):
+		return self.description
+
+	class Meta:
+		ordering = ['time',]
+
 # Prescription Models
-class Prescription(models.Model):
-    prid=models.AutoField(primary_key=True)
-    clients = models.ForeignKey('ClientProfile', on_delete=models.CASCADE,null=True, related_name='clients')
-    counsel = models.OneToOneField('Counselor', on_delete=models.CASCADE, related_name='counsel')
-    prescription=models.TextField()
-    diagnosis=models.CharField(max_length=25)
-    date=models.DateTimeField(default=timezone.now)
-    def __str__(self):
-        return f'{self.prid}'
+# class Prescription(models.Model):
+#     prid=models.AutoField(primary_key=True)
+#     clients = models.ForeignKey('ClientProfile', on_delete=models.CASCADE,null=True, related_name='clients')
+#     counsel = models.OneToOneField('Counselor', on_delete=models.CASCADE, related_name='counsel')
+#     prescription=models.TextField()
+#     diagnosis=models.CharField(max_length=25)
+#     date=models.DateTimeField(default=timezone.now)
+#     def __str__(self):
+#         return f'{self.prid}'
