@@ -106,7 +106,7 @@ class Counselling(models.Model):
 
 	class Meta:
 		ordering = ['-date_contacted',]
-
+    
 class Conversation(models.Model):
 	client = models.ForeignKey(ClientProfile, on_delete=models.CASCADE, null=True)
 	counsellor = models.ForeignKey(Counsellor, on_delete=models.CASCADE, null=True)
@@ -147,7 +147,7 @@ class Appointment(models.Model):
 	
 	def __str__(self):
 		return self.description
-
+    
 	class Meta:
 		ordering = ['time',]
 

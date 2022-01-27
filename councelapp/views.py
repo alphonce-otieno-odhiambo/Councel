@@ -82,8 +82,6 @@ class HomeTemplateView(TemplateView):
 # appointment
 @api_view(['POST'])
 class AppointmentTemplateView(TemplateView):
-    template_name = "appointment.html"
-
     def post(self, request):
         fname = request.POST.get("fname")
         lname = request.POST.get("fname")
@@ -109,11 +107,11 @@ class AppointmentTemplateView(TemplateView):
 # manageappointment
 @api_view(['POST'])
 class ManageAppointmentTemplateView(ListView):
-    template_name = "manage-appointments.html"
+    
     model = Appointment
     context_object_name = "appointments"
     login_required = True
-    paginate_by = 3
+   
 
 
     def post(self, request):
@@ -164,40 +162,39 @@ def addpres(request):
         us=User.objects.filter(first_name=patname).first()
         clnt=ClientProfile.objects.filter(user=us).first()
         diag=request.POST['diag']
-        prescript=Prescription(prescription=pres,diagnosis=diag)
-        prescript.save()
+        
         data = {}
         return Response(data,status = status.HTTP_200_OK)
     # show prescription
-@api_view(['GET'])
-def showpres(request):
-    pre=Prescription.objects.all()
-    data = {}
-    return Response(data,status = status.HTTP_200_OK)
-    # show medical history
-@api_view(['GET'])
-def showmedhis(request):
-    cons=ClientProfile.objects.filter(user=request.user).first()
-    pre=Prescription.objects.filter(client=cons).all()
+# @api_view(['GET'])
+# def showpres(request):
+#     pre=Prescription.objects.all()
+#     data = {}
+#     return Response(data,status = status.HTTP_200_OK)
+#     # show medical history
+# @api_view(['GET'])
+# def showmedhis(request):
+#     cons=ClientProfile.objects.filter(user=request.user).first()
+#     pre=Prescription.objects.filter(client=cons).all()
 
 
 class AppointmentView(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
     permission_class = (permissions.IsAuthenticatedOrReadOnly)
-class PrescriptView(viewsets.ModelViewSet):
-    queryset = Prescription.objects.all()
-    serializer_class = PrescriptionSerializer
-    permission_class = (permissions.IsAuthenticatedOrReadOnly)
+# class PrescriptView(viewsets.ModelViewSet):
+#     queryset = Prescription.objects.all()
+#     serializer_class = PrescriptionSerializer
+#     permission_class = (permissions.IsAuthenticatedOrReadOnly)
 
 class CounselorProfView(viewsets.ModelViewSet):
     queryset = CounselorProfile.objects.all()
-    serializer_class = CounselorProfileSerializer
+    serializer_class = CounsellorProfileSerializer
     permission_class = (permissions.IsAuthenticatedOrReadOnly)
 
 class CounselorView(viewsets.ModelViewSet):
     queryset = Counsellor.objects.all()
-    serializer_class = CounselorSerializer
+    serializer_class = CounsellorSerializer
     permission_class = (permissions.IsAuthenticatedOrReadOnly)
 
 class  GroupView(viewsets.ModelViewSet):
