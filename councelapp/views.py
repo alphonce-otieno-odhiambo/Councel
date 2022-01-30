@@ -48,18 +48,8 @@ def profile(request):
 
 
 @api_view(['POST','GET'])
-def counsellor_group_view(request):
+def group_view(request):
     data = {}
-
-    if request.method == 'POST':
-        serializer = GroupSerializer(data=request.data)
-        if serializer.is_valid:
-            serializer.save(request)
-            data['success'] = "The group has been created successfully"
-            return Response(data,status = status.HTTP_201_CREATED)
-        else:
-            serializer.errors
-            return Response(data,status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'GET':
         groups = Group.objects.filter(group__admin = request.user)
@@ -67,3 +57,18 @@ def counsellor_group_view(request):
 
         return Response(data,status = status.HTTP_200_OK)
 
+    if request.method == 'POST':
+        serializer = GroupSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(request)
+            data['success'] = "The group has been created successfully"
+            return Response(data,status = status.HTTP_201_CREATED)
+        else:
+            serializer.errors
+            print(serializer.errors)
+            return Response(data,status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_counsellors(request):
+    counsellor = Account.objects.filter(is_counsellor=True)

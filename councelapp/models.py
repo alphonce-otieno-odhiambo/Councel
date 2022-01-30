@@ -7,6 +7,12 @@ from counsel_users.models import Account
 counsellor = Account.objects.filter(is_counsellor=True)
 client = Account.objects.filter(is_counsellor=False)
 
+class Group(models.Model):
+    name = models.CharField(max_length=300,unique=True,null=True)
+    admin = models.ForeignKey(Account,on_delete=SET_NULL,null=True)
+    bio = models.TextField(null=True)
+
+
 class Details(models.Model):
     owner = models.OneToOneField(Account,on_delete=CASCADE,)
     first_name = models.CharField(max_length=100,null=True)
@@ -29,11 +35,6 @@ class Counsellor(models.Model):
     @receiver(post_save, sender=Account)
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
-
-class Group(models.Model):
-    name = models.CharField(max_length=300,unique=True,null=True) 
-    admin = models.OneToOneField(Account,on_delete=SET_NULL,null=True)
-    bio = models.TextField(null=True)
 
 
 class Client(models.Model):

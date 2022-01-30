@@ -10,5 +10,5 @@ urlpatterns = [
     path('counsellor_details',user_views.CounsellorView,name='counsellor'),
     path('counsellor_profile',user_views.counsellor_profile,name='profile'),
     path('client_profile',user_views.profile,name="client_profile"),
-    path('counsellor_group_view',user_views.counsellor_group_view,name='counsellor_groups')
+    path('group_view',user_views.group_view,name='counsellor_groups')
 ]
