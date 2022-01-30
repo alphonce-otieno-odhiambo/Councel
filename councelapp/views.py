@@ -53,7 +53,7 @@ def group_view(request):
 
     if request.method == 'GET':
         groups = Group.objects.all()
-        data = GetGroupSerializer(groups,many=True).data
+        data['groups'] = GetGroupSerializer(groups,many=True).data
 
         return Response(data,status = status.HTTP_200_OK)
 
@@ -78,3 +78,13 @@ def get_counsellors(request):
 
     return Response(data,status.HTTP_200_OK)
    
+@api_view(['POST'])
+def join_counsellor(request,pk):
+    data = {}
+
+    client = Client.objects.get(user = request.user)
+    new_counsellor = Counsellor.objects.get(pk=pk)
+    client.counsellor = new_counsellor
+    client.save()
+    data['success'] = f"Thank you for joining {new_counsellor.user.username}."
+    return Response(data,status = status.HTTP_200_OK)

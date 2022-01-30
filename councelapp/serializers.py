@@ -6,11 +6,11 @@ from counsel_users.serializers import UserSerializer
 class CounsellorSerializer(serializers.Serializer):
     user = UserSerializer(read_only=True)
     class Meta:
-        model = Details
-        fields = ['first_name','last_name','qualities','work_experience']
+        model = Counsellor
+        fields = ['profile_pic']
 
     def save(self,request):
-        counsellor = Counsellor(user = request.user,first_name=self.validated_data['first_name'],last_name = self.validated_data['last_name'],qualities = self.validated_data['qualities'],work_experience = self.validated_data['work_experience'])
+        counsellor = Counsellor(user = request.user,profile_pic=self.validated_data['profile_pic'])
         counsellor.save()
         return counsellor 
 
@@ -27,6 +27,9 @@ class CounsellorProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Counsellor
         fields = '__all__'
+    
+    def save(self,request):
+        pic = Counsellor
     
         
 

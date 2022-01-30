@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'counsel_users.apps.CounselUsersConfig',
     'councelapp.apps.CouncelappConfig',
     'corsheaders',
+    'cloudinary'
 
 ]
 
@@ -132,6 +134,11 @@ USE_L10N = True
 
 USE_TZ = True
 
+cloudinary.config(
+    cloud_name='dlzyg12i7',
+    api_key='755948595873632',
+    api_secret='SXz0A7wV1NkRoDpmLN0wFi5PcRM',
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

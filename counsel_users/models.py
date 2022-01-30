@@ -1,6 +1,8 @@
+import profile
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,PermissionsMixin
 from django.conf import settings
+from cloudinary.models import CloudinaryField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
@@ -58,6 +60,7 @@ class Account(PermissionsMixin,AbstractBaseUser):
     Args:
         AbstractBaseUser ([type]): [description]
     """
+    profile_pic = CloudinaryField(blank=True,null=True)
     email = models.EmailField(verbose_name="email",max_length=100,unique=True)
     username = models.CharField(max_length=100,unique=True)
     date_joined = models.DateTimeField(verbose_name="date joined",auto_now_add=True)
