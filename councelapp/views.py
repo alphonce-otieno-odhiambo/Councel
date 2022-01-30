@@ -52,7 +52,7 @@ def group_view(request):
     data = {}
 
     if request.method == 'GET':
-        groups = Group.objects.filter(group__admin = request.user)
+        groups = Group.objects.all()
         data = GetGroupSerializer(groups,many=True).data
 
         return Response(data,status = status.HTTP_200_OK)
@@ -71,4 +71,10 @@ def group_view(request):
 
 @api_view(['GET'])
 def get_counsellors(request):
-    counsellor = Account.objects.filter(is_counsellor=True)
+    data = {}
+    counsellors = Counsellor.objects.filter(user__is_counsellor = True)
+    data = GetCounsellorSerializer(counsellors,many=True).data
+    print(counsellors)
+
+    return Response(data,status.HTTP_200_OK)
+   

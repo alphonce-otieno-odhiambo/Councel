@@ -4,15 +4,22 @@ from councelapp.models import *
 from counsel_users.serializers import UserSerializer
 
 class CounsellorSerializer(serializers.Serializer):
-    account = UserSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
     class Meta:
         model = Details
         fields = ['first_name','last_name','qualities','work_experience']
 
     def save(self,request):
-        counsellor = Counsellor(account= request.user,first_name=self.validated_data['first_name'],last_name = self.validated_data['last_name'],qualities = self.validated_data['qualities'],work_experience = self.validated_data['work_experience'])
+        counsellor = Counsellor(user = request.user,first_name=self.validated_data['first_name'],last_name = self.validated_data['last_name'],qualities = self.validated_data['qualities'],work_experience = self.validated_data['work_experience'])
         counsellor.save()
         return counsellor 
+
+class GetCounsellorSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only = True)
+    class Meta:
+        model = Counsellor
+        fields = '__all__'
+        
 
 class CounsellorProfileSerializer(serializers.ModelSerializer):
     details = CounsellorSerializer(read_only=True)
@@ -20,6 +27,8 @@ class CounsellorProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Counsellor
         fields = '__all__'
+    
+        
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:

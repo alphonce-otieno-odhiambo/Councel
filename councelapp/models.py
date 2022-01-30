@@ -21,7 +21,7 @@ class Details(models.Model):
     experiences = models.TextField(null=True)
 
 class Counsellor(models.Model):
-    user = models.OneToOneField(Account(counsellor),null=False,on_delete=CASCADE,related_name="profile")
+    user = models.OneToOneField(Account,null=False,on_delete=CASCADE,related_name="profile")
     details = models.ForeignKey(Details,on_delete=CASCADE,null=True,related_name='user')
     
     def __str__(self):
@@ -35,6 +35,10 @@ class Counsellor(models.Model):
     @receiver(post_save, sender=Account)
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
+
+    def get_counsellors():
+        counsellors = Account.objects.filter(is_counsellor=True)
+        return counsellors
 
 
 class Client(models.Model):
