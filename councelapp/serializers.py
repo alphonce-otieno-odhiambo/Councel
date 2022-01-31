@@ -24,10 +24,9 @@ class CounsellorProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ClientSerializer(serializers.ModelSerializer):
-    groups = serializers.PrimaryKeyRelatedField(many=True, queryset=Group.objects.all())
     class Meta:
         model = ClientProfile
-        fields = ('id', 'first_name', 'last_name', 'age', 'tel_no', 'groups', 'profile_picture')
+        fields = '__all__'
 
 
 class GroupSerializer(serializers.ModelSerializer):
