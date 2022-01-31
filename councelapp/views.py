@@ -176,6 +176,13 @@ class CounsellingsApi(APIView):
         serializers = CounsellingSerializer(all_counsellings, many=True)
         return Response(serializers.data)
 
+    def post(self, request, format = None):
+        serializers = CounsellingSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save(self)
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class CounsellingApi(APIView):
