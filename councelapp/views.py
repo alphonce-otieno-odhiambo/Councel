@@ -255,7 +255,15 @@ def counselling(request):
     data = {}
     counselling = Counselling.objects.get(user = request.user)
     print(counselling.user.date_contacted)
-    data =  CounsellingSerializer(profile).data
+    data =  CounsellingSerializer(counselling).data
+    return Response(data,status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+def conversation(request):
+    data = {}
+    conversation = Conversation.objects.get(user = request.user)
+    print(conversation.user.date_contacted)
+    data =  ConversationSerializer(conversation).data
     return Response(data,status = status.HTTP_200_OK)
 
 
