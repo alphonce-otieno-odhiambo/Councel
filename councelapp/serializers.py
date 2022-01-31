@@ -39,17 +39,17 @@ class GroupSerializer(serializers.Serializer):
         group = Group(name=self.validated_data['name'],admin=request.user,bio=self.validated_data['bio'])
         group.save()
 
-    class GetGroupSerializer(serializers.ModelSerializer):
-        """This deals with parsing the clients model
-        Args:
-            serializers ([type]): [description]
-        """
-    admin = UserSerializers()
-   
-    class Meta:
-        model = Group
-        fields = '__all__'
-        read_only_fields = ['admin']
+class GetGroupSerializer(serializers.ModelSerializer):
+    """This deals with parsing the clients model
+    Args:
+        serializers ([type]): [description]
+    """
+admin = UserSerializers()
+
+class Meta:
+    model = Group
+    fields = '__all__'
+    read_only_fields = ['admin']
 
 class ClientSerializer(serializers.Serializer):
     account = UserSerializers(read_only=True)

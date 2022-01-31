@@ -112,11 +112,6 @@ def join_counsellor(request,pk):
     client.save()
     data['success'] = f"Thank you for joining {new_counsellor.user.username}."
     return Response(data,status = status.HTTP_200_OK)
-© 2022 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
 
 
 @api_view(['GET'])
