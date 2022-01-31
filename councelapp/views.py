@@ -239,3 +239,12 @@ class ConversationApi(APIView):
         conversation = self.get_conversation(pk)
         serializers = ConversationSerializer(conversation)
         return Response(serializers.data)
+
+    def put (self, request, pk, format = None):
+        conversation = self.get_conversation(pk)
+        serializers = ConversationSerializer(conversation, request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
