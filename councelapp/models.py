@@ -151,13 +151,13 @@ class Appointment(models.Model):
 	class Meta:
 		ordering = ['time',]
 
-# Prescription Models
-# class Prescription(models.Model):
-#     prid=models.AutoField(primary_key=True)
-#     clients = models.ForeignKey('ClientProfile', on_delete=models.CASCADE,null=True, related_name='clients')
-#     counsel = models.OneToOneField('Counselor', on_delete=models.CASCADE, related_name='counsel')
-#     prescription=models.TextField()
-#     diagnosis=models.CharField(max_length=25)
-#     date=models.DateTimeField(default=timezone.now)
-#     def __str__(self):
-#         return f'{self.prid}'
+class Prescription(models.Model):
+    user = models.ForeignKey(Account,on_delete=models.CASCADE)
+    client=models.ForeignKey(Client,on_delete=models.CASCADE)
+    counsellor=models.ForeignKey(Counsellor,on_delete=models.CASCADE)
+    prescription=models.TextField()
+    diagnosis=models.CharField(max_length=25)
+    date=models.DateTimeField(default=timezone.now)
+
+	def __str__(self):
+		return f'{self.user.first_name}'
