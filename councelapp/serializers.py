@@ -83,3 +83,8 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Conversation
         fields = ["id","url","conversation","text","time"]
+
+class PrescriptionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Prescription
+        fields = '__all__'

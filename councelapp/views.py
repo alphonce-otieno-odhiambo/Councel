@@ -275,6 +275,30 @@ def messagess(request):
     return Response(data,status = status.HTTP_200_OK)
 
 
+@api_view(['POST','GET'])
+def group_view(request):
+    data = {}
+
+    if request.method == 'GET':
+        groups = Group.objects.all()
+        data['groups'] = GetGroupSerializer(groups,many=True).data
+
+        return Response(data,status = status.HTTP_200_OK)
+
+    if request.method == 'POST':
+        serializer = GroupSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(request)
+            data['success'] = "The group has been created successfully"
+            return Response(data,status = status.HTTP_201_CREATED)
+        else:
+            serializer.errors
+            print(serializer.errors)
+            return Response(data,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
  # add prescription
 
     # show prescription
