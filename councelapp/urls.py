@@ -31,6 +31,7 @@ urlpatterns = [
     path('counselling/',views.counselling,name="counselling"),
     path('conversation/',views.conversation,name="conversation"),
     path('messagess/',views.messagess,name="messagess"),
+    path('prescription/',views.prescription,name="prescription"),
     path('api/', include(router.urls), name = 'api'),
 
 ]
