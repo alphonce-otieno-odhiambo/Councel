@@ -225,3 +225,17 @@ class ConversationsApi(APIView):
             serializers.save(self)
             return Response(serializers.data, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class ConversationApi(APIView):
+    def get_conversation(self, pk):
+        try:
+            return Conversation.objects.get(pk=pk)
+        except Conversation.DoesNotExist:
+            return Http404
+
+    def get(self, request, pk, format = None):
+        conversation = self.get_conversation(pk)
+        serializers = ConversationSerializer(conversation)
+        return Response(serializers.data)
