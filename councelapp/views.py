@@ -170,6 +170,14 @@ class GroupApi(APIView):
 
 
 
+class CounsellingsApi(APIView):
+    def get(self, request, format = None):
+        all_counsellings = Counselling.objects.all()
+        serializers = CounsellingSerializer(all_counsellings, many=True)
+        return Response(serializers.data)
+
+
+
 class CounsellingApi(APIView):
     def get_counselling(self, pk):
         try:
