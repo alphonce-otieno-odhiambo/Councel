@@ -213,7 +213,7 @@ class AppointmentAPI(APIView):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def CounsellorView(request):
+def ClientView(request):
     serializer = ClientSerializer(data = request.data)
     account = Account.objects.get(user=request.user)
     data = {}
@@ -235,7 +235,7 @@ def CounsellorView(request):
         return Response(data,status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])   
-def counsellor_profile(request):
+def client_profile(request):
     data = {}
     profile = ClientProfile.objects.get(user = request.user)
     print(profile.user.date_joined)
@@ -269,9 +269,9 @@ def conversation(request):
 @api_view(['GET'])
 def messagess(request):
     data = {}
-    conversation = Message.objects.get(user = request.user)
-    print(conversation.user.date_contacted)
-    data =  MessageSerializer(conversation).data
+    messagess = Message.objects.get(user = request.user)
+    print(messagess.user.date_contacted)
+    data =  MessageSerializer(messagess).data
     return Response(data,status = status.HTTP_200_OK)
 
 

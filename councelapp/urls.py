@@ -23,13 +23,17 @@ urlpatterns = [
     
     path('api/', include(router.urls), name = 'api'),
     path("profile/",views.profile, name="profile"),
-    path('group_view/',views.group_view,name='group_view'),
+    path('group_view/',views.group_view,name='counsellor_groups'),
     path('get_counsellors/',views.get_counsellors,name='counsellors'),
-    path('showmedhis/',views.showmedhis,name='showmedhis'),
-    path('join_counsellor/<int:pk>',user_views.join_counsellor,name="join_counsellor")
+    path('join_counsellor/',views.join_counsellor,name='join_counsellor'),
+    path('ClientView/',views.ClientView,name="ClientView"),
+    path('client_profile/',views.client_profile,name="client_profile"),
+    path('counselling/',views.counselling,name="counselling"),
+    path('conversation/',views.conversation,name="conversation"),
+    path('messagess/',views.messagess,name="messagess"),
     path('api/', include(router.urls), name = 'api'),
-]
 
+]
 
 
 
