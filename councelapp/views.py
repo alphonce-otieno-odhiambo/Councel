@@ -234,6 +234,31 @@ def CounsellorView(request):
         data['response'] = 'There is no client registered under those credentials'
         return Response(data,status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])   
+def counsellor_profile(request):
+    data = {}
+    profile = ClientProfile.objects.get(user = request.user)
+    print(profile.user.date_joined)
+    data =  ClientProfileSerializer(profile).data
+    return Response(data,status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+def profile(request):
+    data = {}
+    profile = Client.objects.get(user = request.user)
+    print(profile.user.date_joined)
+    data =  ClientProfileSerializer(profile).data
+    return Response(data,status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+def counselling(request):
+    data = {}
+    counselling = Counselling.objects.get(user = request.user)
+    print(counselling.user.date_contacted)
+    data =  CounsellingSerializer(profile).data
+    return Response(data,status = status.HTTP_200_OK)
+
+
  # add prescription
 
     # show prescription
