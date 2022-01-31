@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'counsel_users',
     'cloudinary_storage',
     'django_filters',
+    'corsheaders'
     
     
 ]  
@@ -71,6 +72,8 @@ INSTALLED_APPS = [
   
 MIDDLEWARE = [
     
+    'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
