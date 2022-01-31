@@ -74,10 +74,18 @@ def get_counsellors(request):
     data = {}
     counsellors = Counsellor.objects.filter(user__is_counsellor = True)
     data = GetCounsellorSerializer(counsellors,many=True).data
-    print(counsellors)
 
     return Response(data,status.HTTP_200_OK)
    
+@api_view(['GET'])
+def get_single_counsellor(request,pk):
+
+    counsellor = Counsellor.objects.get(pk=pk) 
+    data = CounsellorSerializer(counsellor,many=False).data
+    print(data)
+
+    return Response(data,status= status.HTTP_200_OK)
+
 @api_view(['POST'])
 def join_counsellor(request,pk):
     data = {}

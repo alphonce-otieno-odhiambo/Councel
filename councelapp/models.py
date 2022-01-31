@@ -35,6 +35,13 @@ class Counsellor(models.Model):
         counsellors = Account.objects.filter(is_counsellor=True)
         return counsellors
 
+    def get_single_counsellor(pk):
+        user = Account.objects.get(pk=pk)
+        counsellor = Counsellor.objects.get(user=user)
+        return counsellor
+        
+
+
 class Details(models.Model):
     counsellor = models.OneToOneField(Counsellor,on_delete=CASCADE,null=True)
     first_name = models.CharField(max_length=100,null=True)
