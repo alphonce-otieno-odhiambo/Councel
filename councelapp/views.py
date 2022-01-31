@@ -81,33 +81,37 @@ class AppointmentAPI(APIView):
 # Prescription
 
     # add prescription
-# @login_required(login_url="/accounts/login/")
-# def addpres(request):
-#     con=Counsellor.objects.filter(user=request.user).first()
-#     c=Client.objects.all()
-#     if request.method=='POST':
-#         clntname=request.POST['pat']
-#         pres=request.POST['pres']
-#         us=User.objects.filter(first_name=clntname).first()
-#         clnt=Client.objects.filter(user=us).first()
-#         dia=request.POST['dia']
-#         prescript=Prescription(prescription=pres,client=clnt,counsellor=con,diagnosis=dia)
-#         prescript.save()
-#         return redirect("showpres")
-#     return render(request,'prescriptions/addpres.html',{'c':c})
+@login_required(login_url="/accounts/login/")
+def addpres(request):
+    con=Counsellor.objects.filter(user=request.user).first()
+    c=Client.objects.all()
+    if request.method=='POST':
+        clntname=request.POST['pat']
+        pres=request.POST['pres']
+        us=User.objects.filter(first_name=clntname).first()
+        clnt=Client.objects.filter(user=us).first()
+        dia=request.POST['dia']
+        prescript=Prescription(prescription=pres,client=clnt,counsellor=con,diagnosis=dia)
+        prescript.save()
+        return redirect("showpres")
+    return render(request,'prescriptions/addpres.html',{'c':c})
 
     # show prescription
-# @login_required(login_url="/accounts/login/")
-# def showpres(request):
-#     pre=Prescription.objects.all()
-#     return render(request,'prescriptions/showpres.html',{'pre':pre})
+@login_required(login_url="/accounts/login/")
+def showpres(request):
+    pre=Prescription.objects.all()
+    return render(request,'prescriptions/showpres.html',{'pre':pre})
 
     # show medical history
-# @login_required(login_url="/accounts/login/")
-# def showmedhis(request):
-#     con=Client.objects.filter(user=request.user).first()
-#     pre=Prescription.objects.filter(client=con).all()
-#     return render(request,'prescriptions/showmedhis.html',{'pre':pre})
+@login_required(login_url="/accounts/login/")
+def showmedhis(request):
+    con=Client.objects.filter(user=request.user).first()
+    pre=Prescription.objects.filter(client=con).all()
+    return render(request,'prescriptions/showmedhis.html',{'pre':pre})
+
+
+
+
 
 
 
