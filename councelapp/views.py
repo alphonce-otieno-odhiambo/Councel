@@ -53,7 +53,8 @@ def CounsellorView(request):
     else:
         data['response'] = 'There is no counsellor registered under those credentials'
         return Response(data,status=status.HTTP_404_NOT_FOUND)
-    
+
+
 @api_view(['GET'])   
 def counsellor_profile(request):
     data = {}
@@ -97,7 +98,7 @@ def group_view(request):
 def get_counsellors(request):
     data = {}
     counsellors = Counsellor.objects.filter(user__is_counsellor = True)
-    data = GetCounsellorSerializer(counsellors,many=True).data
+    data = CounsellorSerializer(counsellors,many=True).data
     print(counsellors)
 
     return Response(data,status.HTTP_200_OK)
@@ -114,57 +115,11 @@ def join_counsellor(request,pk):
     return Response(data,status = status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-def counselprofile(request):
 
-    current_user = request.user
-    data = {}
-    profile = CounselorProfile.objects.filter(user_id=current_user.id).first()           
-    return Response(data,status = status.HTTP_200_OK)
-@api_view(['POST'])
-def update_profile(request,id):
-    user = User.objects.get(id=id)
-    profile = CounselorProfile.objects.get(user_id = user)
-    form = CounselorProfile(instance=profile)
-    if request.method == "POST":
-            form = CounselorProfile(request.POST,request.FILES,instance=profile)
-            if form.is_valid():
-                profile = form.save(commit=False)
-                profile.save()
-                data = {}
-                return Response(data,status = status.HTTP_200_OK)
-    else:
-        form = CounselorProfile()
-        data = {}
-        return Response(data,status = status.HTTP_200_OK)
-@api_view(['GET'])
-def counselor(request):
-    current_user = request.user
-    data = {}
-    counselordetails = Counsellor.objects.filter(user_id=current_user.id).first()           
-    return Response(data,status = status.HTTP_200_OK)
 
         
 
     
-@api_view(['POST'])
-class HomeTemplateView(TemplateView):
-    
-    
-    def post(self, request):
-        name = request.POST.get("name")
-        email = request.POST.get("email")
-        message = request.POST.get("message")
-
-        email = EmailMessage(
-            subject= f"{name} from counsellor.",
-            body=message,
-            from_email=settings.EMAIL_HOST_USER,
-            to=[settings.EMAIL_HOST_USER],
-            reply_to=[email]
-        )
-        email.send()
-        return HttpResponse("Email sent successfully!")
 
 # appointment
 @api_view(['POST'])
