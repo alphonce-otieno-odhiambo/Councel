@@ -211,7 +211,28 @@ class AppointmentAPI(APIView):
         appointment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def CounsellorView(request):
+    serializer = ClientSerializer(data = request.data)
+    account = Account.objects.get(user=request.user)
+    data = {}
+    
+    if account.is_client == True:
+        if serializer.is_valid():
+            serializer.save()
+            data['response'] = f'Additional details for {account.username} successfully added'
+            return Response(data,status = status.HTTP_201_CREATED)
+        else:
+            data = serializer.errors
+            return Response(data,status=status.HTTP_400_BAD_REQUEST)
+    if account.is_client == False:
+        data['response'] = 'There is no client registered under those credentials'
+        return Response(data,status=status.HTTP_404_NOT_FOUND)
+    
+    else:
+        data['response'] = 'There is no client registered under those credentials'
+        return Response(data,status=status.HTTP_404_NOT_FOUND)
 
  # add prescription
 
