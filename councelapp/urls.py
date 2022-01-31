@@ -17,9 +17,9 @@ urlpatterns = [
     
     re_path(r'^apointment/appointment-id/(?P<pk>[0-9]+)$', views.AppointmentAPI.as_view()),
     
-    # path('addpres/',views.addpres,name='addpres'),
-    # path('showpres/',views.showpres,name='showpres'),
-    # path('showmedhis/',views.showmedhis,name='showmedhis'),
+    path('addpres/',views.addpres,name='addpres'),
+    path('showpres/',views.showpres,name='showpres'),
+    path('showmedhis/',views.showmedhis,name='showmedhis'),
 
 
 
