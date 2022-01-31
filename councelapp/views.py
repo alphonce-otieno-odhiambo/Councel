@@ -137,7 +137,7 @@ class GroupsApi(APIView):
     def post(self, request, format = None):
         serializers = GroupSerializer(data=request.data)
         if serializers.is_valid():
-            serializers.save()
+            serializers.save(self)
             return Response(serializers.data, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -170,6 +170,21 @@ class GroupApi(APIView):
 
 
 
+class CounsellingsApi(APIView):
+    def get(self, request, format = None):
+        all_counsellings = Counselling.objects.all()
+        serializers = CounsellingSerializer(all_counsellings, many=True)
+        return Response(serializers.data)
+
+    def post(self, request, format = None):
+        serializers = CounsellingSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save(self)
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 class CounsellingApi(APIView):
     def get_counselling(self, pk):
         try:
@@ -194,4 +209,47 @@ class CounsellingApi(APIView):
     def delete(self, request, pk, format = None):
         counselling = self.get_counselling(pk)
         counselling.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class ConversationsApi(APIView):
+    def get(self, request, format = None):
+        all_conversations = Conversation.objects.all()
+        serializers = ConversationSerializer(all_conversations, many=True)
+        return Response(serializers.data)
+
+    def post(self, request, format = None):
+        serializers = ConversationSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save(self)
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class ConversationApi(APIView):
+    def get_conversation(self, pk):
+        try:
+            return Conversation.objects.get(pk=pk)
+        except Conversation.DoesNotExist:
+            return Http404
+
+    def get(self, request, pk, format = None):
+        conversation = self.get_conversation(pk)
+        serializers = ConversationSerializer(conversation)
+        return Response(serializers.data)
+
+    def put (self, request, pk, format = None):
+        conversation = self.get_conversation(pk)
+        serializers = ConversationSerializer(conversation, request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format = None):
+        conversation = self.get_conversation(pk)
+        conversation.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
