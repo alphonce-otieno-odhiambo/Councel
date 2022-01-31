@@ -10,7 +10,8 @@ from .views import *
 urlpatterns = [
     path('counsellor_details',user_views.CounsellorView,name='counsellor'),
     path('counsellors',user_views.get_counsellors,name="counsellors"),
-    path('counsellor/<int:pk>',user_views.get_single_counsellor,name='single_counsellor'),
+    path('get_counsellor',user_views.clients_counsellor,name="get_counsellor"),
+    path('join_counsellor/<int:pk>',user_views.join_counsellor,name='join_counsellor'),
     path('counsellor_profile',user_views.counsellor_profile,name='profile'),
     path('client_profile',user_views.profile,name="client_profile"),
     path('group_view',user_views.group_view,name='counsellor_groups'),

@@ -14,8 +14,19 @@ class CounsellorSerializer(serializers.Serializer):
         counsellor.save()
         return counsellor 
 
+class DetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Details
+        fields = '__all__'
+
+    def save(self,request):
+        details = Details(first_name = self.validated_data['first_name'],last_name = self.validated_data['last_name'],qualities = self.validated_data['qualities'],experiences = self.validated_data['experiences'])
+        details.save()
+        return details
+
 class GetCounsellorSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only = True)
+    details = DetailsSerializer(read_only = True)
     class Meta:
         model = Counsellor
         fields = '__all__'
@@ -60,5 +71,5 @@ class ClientProfileSerializer(serializers.ModelSerializer):
     counsellor = CounsellorProfileSerializer(read_only=True)
     user = UserSerializer(read_only=True)
     class Meta:
-        model = Counsellor
+        model = Client
         fields = '__all__'

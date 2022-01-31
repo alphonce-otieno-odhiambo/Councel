@@ -76,15 +76,25 @@ def get_counsellors(request):
     data = GetCounsellorSerializer(counsellors,many=True).data
 
     return Response(data,status.HTTP_200_OK)
-   
-@api_view(['GET'])
-def get_single_counsellor(request,pk):
 
-    counsellor = Counsellor.objects.get(pk=pk) 
-    data = CounsellorSerializer(counsellor,many=False).data
-    print(data)
+@api_view(["GET"])
+def clients_counsellor(request):
+    data = {}
+    client = Client.objects.get(user=request.user)
+    print(client.counsellor)
+    data = ClientProfileSerializer(client).data
+    return Response(data,status = status.HTTP_200_OK)
 
-    return Response(data,status= status.HTTP_200_OK)
+@api_view(['POST'])
+def join_counsellor(request,pk):
+    data = {}
+
+    client = Client.objects.get(user = request.user)
+    new_counsellor = Counsellor.objects.get(pk=pk)
+    client.counsellor = new_counsellor
+    client.save()
+    data['success'] = f"Congratulations.{new_counsellor.username} is now your counsellor."
+    return Response(data,status = status.HTTP_200_OK)
 
 @api_view(['POST'])
 def join_counsellor(request,pk):

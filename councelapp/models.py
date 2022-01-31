@@ -14,10 +14,16 @@ class Group(models.Model):
     admin = models.ForeignKey(Account,on_delete=SET_NULL,null=True)
     bio = models.TextField(null=True)
 
+class Details(models.Model):
+    first_name = models.CharField(max_length=100,null=True)
+    last_name = models.CharField(max_length=100,null=True)
+    qualities = models.TextField(null=True)
+    experiences = models.TextField(null=True)
 
 
 class Counsellor(models.Model):
     user = models.OneToOneField(Account,null=False,on_delete=CASCADE,related_name="profile")
+    details = models.ForeignKey(Details,null=True,on_delete=CASCADE,related_name="details")
 
     def __str__(self):
         return self.user.username + "'s " + "profile"
@@ -42,12 +48,6 @@ class Counsellor(models.Model):
         
 
 
-class Details(models.Model):
-    counsellor = models.OneToOneField(Counsellor,on_delete=CASCADE,null=True)
-    first_name = models.CharField(max_length=100,null=True)
-    last_name = models.CharField(max_length=100,null=True)
-    quantiles = models.TextField(null=True)
-    experiences = models.TextField(null=True)
 
 
 class Client(models.Model):
