@@ -266,6 +266,14 @@ def conversation(request):
     data =  ConversationSerializer(conversation).data
     return Response(data,status = status.HTTP_200_OK)
 
+@api_view(['GET'])
+def messagess(request):
+    data = {}
+    conversation = Message.objects.get(user = request.user)
+    print(conversation.user.date_contacted)
+    data =  MessageSerializer(conversation).data
+    return Response(data,status = status.HTTP_200_OK)
+
 
  # add prescription
 
