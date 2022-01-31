@@ -45,15 +45,13 @@ class Appointment(models.Model):
 
 
 # Prescription Models
-# class Prescription(models.Model):
-#     user = models.ForeignKey(User,on_delete=models.CASCADE)
-#     patient=models.ForeignKey(Patient,on_delete=models.CASCADE)
-#     doctor=models.ForeignKey(Doctor,on_delete=models.CASCADE)
-#     prescription=models.TextField()
-#     diagnosis=models.CharField(max_length=25)
-#     date=models.DateTimeField(default=timezone.now)
+class Prescription(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    client=models.ForeignKey(Client,on_delete=models.CASCADE)
+    counsellor=models.ForeignKey(Counsellor,on_delete=models.CASCADE)
+    prescription=models.TextField()
+    diagnosis=models.CharField(max_length=25)
+    date=models.DateTimeField(default=timezone.now)
 
-#         def __str__(self):
-#              return f'{self.user.first_name}'
-    
-     
+	def __str__(self):
+		return f'{self.user.first_name}' 
