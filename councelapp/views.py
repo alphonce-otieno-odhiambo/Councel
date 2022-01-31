@@ -218,3 +218,10 @@ class ConversationsApi(APIView):
         all_conversations = Conversation.objects.all()
         serializers = ConversationSerializer(all_conversations, many=True)
         return Response(serializers.data)
+
+    def post(self, request, format = None):
+        serializers = ConversationSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save(self)
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
