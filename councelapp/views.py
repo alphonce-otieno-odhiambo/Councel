@@ -276,20 +276,20 @@ def messagess(request):
 
 
 @api_view(['POST','GET'])
-def group_view(request):
+def prescription(request):
     data = {}
 
     if request.method == 'GET':
-        groups = Group.objects.all()
-        data['groups'] = GetGroupSerializer(groups,many=True).data
+        pres = Prescription.objects.all()
+        data['pres'] = PrescriptionSerializer(pres,many=True).data
 
         return Response(data,status = status.HTTP_200_OK)
 
     if request.method == 'POST':
-        serializer = GroupSerializer(data=request.data)
+        serializer = PrescriptionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(request)
-            data['success'] = "The group has been created successfully"
+            data['success'] = "The prescription has been provided successfully"
             return Response(data,status = status.HTTP_201_CREATED)
         else:
             serializer.errors
