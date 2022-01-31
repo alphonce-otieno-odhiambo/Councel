@@ -210,3 +210,11 @@ class CounsellingApi(APIView):
         counselling = self.get_counselling(pk)
         counselling.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class ConversationsApi(APIView):
+    def get(self, request, format = None):
+        all_conversations = Conversation.objects.all()
+        serializers = ConversationSerializer(all_conversations, many=True)
+        return Response(serializers.data)
