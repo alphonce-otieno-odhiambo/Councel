@@ -158,6 +158,3 @@ class Prescription(models.Model):
     prescription=models.TextField()
     diagnosis=models.CharField(max_length=25)
     date=models.DateTimeField(default=timezone.now)
-
-	def __str__(self):
-		return f'{self.user.first_name}'
