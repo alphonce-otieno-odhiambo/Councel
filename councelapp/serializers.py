@@ -70,6 +70,34 @@ class GetGroupSerializer(serializers.ModelSerializer):
 class ClientProfileSerializer(serializers.ModelSerializer):
     counsellor = CounsellorProfileSerializer(read_only=True)
     user = UserSerializer(read_only=True)
+    group = GroupSerializer(read_only=True)
     class Meta:
         model = Client
         fields = '__all__'
+
+class TextSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Text
+        fields = ['text']
+
+    def save(self,request):
+        text = Text(text=self.validated_data['text'])
+        text.save()
+
+class ChatSerializer(serializers.ModelSerializer):
+    client = ClientProfileSerializer(read_only=True)
+    text = TextSerializer(read_only=True)
+    class Meta:
+        model = Chat
+        fields = '__all__'
+
+class GroupChatSerializer(serializers.ModelSerializer):
+    group = GroupSerializer(read_only=True)
+    reporter = UserSerializer(read_only=True)
+    class Meta:
+        model = GroupChat
+        fields = '__all__'
+
+    def save(self,request,group):
+        groupchat = GroupChat(group = group,reporter = request.user,text = self.validated_data['text'])
+        groupchat.save()

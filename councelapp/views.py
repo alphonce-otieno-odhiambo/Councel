@@ -1,7 +1,9 @@
+from datetime import datetime
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+import datetime
 
 from .serializers import *
 from counsel_users.models import Account
@@ -30,6 +32,12 @@ def CounsellorView(request):
         data['response'] = 'There is no counsellor registered under those credentials'
         return Response(data,status=status.HTTP_404_NOT_FOUND)
     
+@api_view(['GET'])
+def current_date(request):
+    current_date = datetime.datetime.now()
+    print(current_date)
+    return Response(current_date,status = status.HTTP_200_OK)
+
 @api_view(['GET'])   
 def counsellor_profile(request):
     data = {}
@@ -106,3 +114,51 @@ def join_counsellor(request,pk):
     client.save()
     data['success'] = f"Thank you for joining {new_counsellor.user.username}."
     return Response(data,status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_group(request):
+    client = Client.objects.get(user=request.user)
+    print(client.group)
+    data = ClientProfileSerializer(client).data
+    return Response(data,status = status.HTTP_200_OK) 
+
+@api_view(['POST'])
+def join_group(request,pk):
+    data = {}
+
+    client = Client.objects.get(user = request.user)
+    new_group = Group.objects.get(pk=pk)
+    client.group = new_group
+    client.save()
+    data['success'] = f"Welcome to {new_group.name}" 
+    return Response(data,status = status.HTTP_200_OK)
+
+@api_view(['GET','POST'])
+def group_chat(request,pk):
+    data = {}
+
+    try:
+        group = Group.objects.get(pk=pk)
+    except :
+
+        data['not found'] = "The group was not found"
+        return Response(data,status = status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'POST':
+        serializer = GroupChatSerializer(data = request.data)
+
+        if serializer.is_valid():
+            serializer.save(request,group)
+            data['success'] = "The message was successfully sent"
+            return Response(data,status = status.HTTP_200_OK)
+
+        else:
+            data = serializer.errors
+            print(data)
+            return Response(data,status = status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'GET':
+        messages = GroupChat.get_messages(pk)
+        data = GroupChatSerializer(messages,many=True).data
+
+        return Response(data,status= status.HTTP_200_OK)

@@ -14,6 +14,22 @@ class Group(models.Model):
     admin = models.ForeignKey(Account,on_delete=SET_NULL,null=True)
     bio = models.TextField(null=True)
 
+class GroupChat(models.Model):
+    group = models.ForeignKey(Group,on_delete=SET_NULL,null=True)
+    reporter = models.ForeignKey(Account,on_delete=CASCADE,null=True)
+    text = models.TextField()
+    time_sent = models.DateTimeField(auto_now_add=True,null=True)
+
+    def get_messages(pk):
+        """This returns all the messages sent in a group
+        Args:
+            pk ([type]): [description]
+        """
+        group = Group.objects.get(pk = pk)
+        messages = GroupChat.objects.filter(group = group)
+
+        return messages
+
 class Details(models.Model):
     first_name = models.CharField(max_length=100,null=True)
     last_name = models.CharField(max_length=100,null=True)
@@ -53,6 +69,7 @@ class Counsellor(models.Model):
 class Client(models.Model):
     user = models.OneToOneField(Account(client),null=False,on_delete=CASCADE,related_name="client_profile")
     counsellor = models.ForeignKey(Counsellor,null=True,blank=True,on_delete=models.SET_NULL,related_name="counsellor")
+    group = models.ForeignKey(Group,on_delete=SET_NULL,null=True)
 
     def __str__(self):
         return self.user.username + "'s " + "profile"
@@ -65,3 +82,10 @@ class Client(models.Model):
     @receiver(post_save, sender=Account)
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
+
+class Text(models.Model):
+    text = models.TextField()
+
+class Chat(models.Model):
+    client = models.OneToOneField(Client,on_delete=CASCADE,null=True)
+    Text = models.ForeignKey(Text,on_delete=CASCADE,null=True)
