@@ -8,3 +8,4 @@ admin.site.register(Client)
 admin.site.register(Details)
 admin.site.register(GroupChat)
 
+

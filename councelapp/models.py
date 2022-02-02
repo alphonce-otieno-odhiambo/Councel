@@ -1,4 +1,5 @@
 from tokenize import group
+from urllib import request
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from cloudinary.models import CloudinaryField
@@ -63,9 +64,6 @@ class Counsellor(models.Model):
         return counsellor
         
 
-
-
-
 class Client(models.Model):
     user = models.OneToOneField(Account(client),null=False,on_delete=CASCADE,related_name="client_profile")
     counsellor = models.ForeignKey(Counsellor,null=True,blank=True,on_delete=models.SET_NULL,related_name="counsellor")
@@ -83,9 +81,3 @@ class Client(models.Model):
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
 
-class Text(models.Model):
-    text = models.TextField()
-
-class Chat(models.Model):
-    client = models.OneToOneField(Client,on_delete=CASCADE,null=True)
-    Text = models.ForeignKey(Text,on_delete=CASCADE,null=True)

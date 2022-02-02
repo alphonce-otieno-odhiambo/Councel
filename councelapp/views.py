@@ -1,11 +1,13 @@
 from datetime import datetime
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import datetime
 
 from .serializers import *
+from .pusher import pusher_client
 from counsel_users.models import Account
 
 # Create your views here.
@@ -162,3 +164,16 @@ def group_chat(request,pk):
         data = GroupChatSerializer(messages,many=True).data
 
         return Response(data,status= status.HTTP_200_OK)
+
+
+class MessageAPIView(APIView):
+
+    def post(self, request):
+        pusher_client.trigger('chat', 'message', {
+            'message':request.data['message']
+        })
+
+        return Response([])
+
+
+            

@@ -75,21 +75,9 @@ class ClientProfileSerializer(serializers.ModelSerializer):
         model = Client
         fields = '__all__'
 
-class TextSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Text
-        fields = ['text']
 
-    def save(self,request):
-        text = Text(text=self.validated_data['text'])
-        text.save()
 
-class ChatSerializer(serializers.ModelSerializer):
-    client = ClientProfileSerializer(read_only=True)
-    text = TextSerializer(read_only=True)
-    class Meta:
-        model = Chat
-        fields = '__all__'
+
 
 class GroupChatSerializer(serializers.ModelSerializer):
     group = GroupSerializer(read_only=True)
