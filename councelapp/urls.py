@@ -1,40 +1,19 @@
-from django.urls import path , include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path,re_path
+from rest_framework.authtoken import views
 from . import views
 
-from . import views 
-from rest_framework import routers
-from .views import HomeTemplateView, AppointmentTemplateView, ManageAppointmentTemplateView
-
-router = routers.DefaultRouter()
-router.register('Councelorprofile', views.CounselorProfView),
-router.register('Councelor', views.CounselorView),
-router.register('Appointment', views.AppointmentView),
-router.register('Appointment', views.PrescriptView),
-router.register('GroupView', views.GroupView),
-router.register('ClientProfileView', views.ClientProfileView),
 
 
 
-urlpatterns = [
-    
-    path('CounsellorView/', views.CounsellorView, name='CounsellorView'),
-    path('join_counsellor/<int:id>', views.join_counsellor, name = 'join_counsellor'),  
-    path('counsellor_profile/', views.counsellor_profile, name='counsellor_profile'),  
-    
-    path('api/', include(router.urls), name = 'api'),
-    path("profile/",views.profile, name="profile"),
-    path('group_view/',views.group_view,name='counsellor_groups'),
-    path('get_counsellors/',views.get_counsellors,name='counsellors'),
-    path('join_counsellor/',views.join_counsellor,name='join_counsellor'),
-    path('ClientView/',views.ClientView,name="ClientView"),
-    path('client_profile/',views.client_profile,name="client_profile"),
-    path('counselling/',views.counselling,name="counselling"),
-    path('conversation/',views.conversation,name="conversation"),
-    path('messagess/',views.messagess,name="messagess"),
-    path('prescription/',views.prescription,name="prescription"),
-    path('api/', include(router.urls), name = 'api'),
-
+urlpatterns=[
+    path('clients/', views.ClientsApi.as_view()),
+    path('groups/', views.GroupsApi.as_view()),
+    path('counsellings/', views.CounsellingsApi.as_view()),
+    path('conversations/', views.ConversationsApi.as_view()),
+    re_path(r'^client/client-id/(?P<pk>[0-9]+)$', views.ClientApi.as_view()),
+    re_path(r'^group/group-id/(?P<pk>[0-9]+)$', views.GroupApi.as_view()),
+    re_path(r'^counselling/counselling-id/(?P<pk>[0-9]+)$', views.CounsellingApi.as_view()),
+    re_path(r'^conversation/conversation-id/(?P<pk>[0-9]+)$', views.ConversationApi.as_view()),
 ]
-
-
-
