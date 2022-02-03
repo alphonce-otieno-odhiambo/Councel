@@ -51,9 +51,9 @@ def counsellor_profile(request):
 @api_view(['GET'])
 def profile(request):
     data = {}
-    profile = Counsellor.objects.get(user = request.user)
+    profile = Client.objects.get(user = request.user)
     print(profile.user.date_joined)
-    data =  CounsellorProfileSerializer(profile).data
+    data =  ClientProfileSerializer(profile).data
     return Response(data,status = status.HTTP_200_OK)
 
 
@@ -94,6 +94,21 @@ def clients_counsellor(request):
     print(client.counsellor)
     data = ClientProfileSerializer(client).data
     return Response(data,status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+
+def get_clients(request,pk):
+    """
+    This parses the request to get the users in a certain neighbourhood
+    Args:
+        request ([type]): [description]
+        pk ([type]): [description]
+    """
+    data = {}
+    clients = Client.get_clients(pk)
+    data['clients'] = ClientProfileSerializer(clients,many=True).data
+    return Response(data,status = status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 def join_counsellor(request,pk):

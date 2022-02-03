@@ -81,3 +81,14 @@ class Client(models.Model):
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
 
+    def get_clients(pk):
+        """This will return all users in a given neighbourhood
+        Args:
+            pk ([type]): [description]
+        Returns:
+            [type]: [description]
+        """
+        counsellor = Counsellor.objects.get(pk=pk)
+        clients = Client.objects.filter(counsellor = counsellor)
+
+        return clients

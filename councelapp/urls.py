@@ -15,6 +15,7 @@ urlpatterns = [
     path('join_counsellor/<int:pk>',user_views.join_counsellor,name='join_counsellor'),
     path('counsellor_profile',user_views.counsellor_profile,name='profile'),
     path('client_profile',user_views.profile,name="client_profile"),
+    path('my_clients/<int:pk>',user_views.get_clients,name='get_clients'),
     path('client_group',user_views.get_group,name='get_group'),
     path('join_group/<int:pk>',user_views.join_group,name="join_group"),
     path('group_view',user_views.group_view,name='counsellor_groups'),
