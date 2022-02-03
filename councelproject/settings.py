@@ -56,8 +56,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'councelapp',
-    'cloudinary',
     'rest_framework',
     'rest_framework.authtoken',
     'counsel_users.apps.CounselUsersConfig',
