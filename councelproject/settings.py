@@ -10,14 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-
-import os
+from pathlib import Path
+from decouple import config,Csv
+import django_heroku
 import cloudinary
-
-
 import cloudinary.uploader
 import cloudinary.api
-from pathlib import Path
+import os
 
 
 
@@ -43,7 +42,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# cloudinary
 
 
 
@@ -56,12 +54,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'councelapp',
     'cloudinary',
     'rest_framework',
+    'rest_framework.authtoken',
     'counsel_users',
     'cloudinary_storage',
     'django_filters',
+    'corsheaders'
     
     
 ]  
@@ -71,6 +72,8 @@ INSTALLED_APPS = [
   
 MIDDLEWARE = [
     
+    'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -117,10 +120,24 @@ REST_FRAMEWORK = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': '',
     }
 }
+
+
+# Cloudinary for images
+
+cloudinary.config(
+    cloud_name =config('CLOUD_NAME'),
+    api_key=config('CLOUD_API_KEY'), 
+    api_secret=config('API_SECRET'),
+)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
