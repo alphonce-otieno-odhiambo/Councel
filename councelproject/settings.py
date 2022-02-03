@@ -17,6 +17,7 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 import os
+import cloudinary
 
 
 
@@ -59,16 +60,13 @@ INSTALLED_APPS = [
     'cloudinary',
     'rest_framework',
     'rest_framework.authtoken',
-    'counsel_users',
-    'cloudinary_storage',
-    'django_filters',
-    
-    
-]  
-    
-    
-    
-  
+    'counsel_users.apps.CounselUsersConfig',
+    'councelapp.apps.CouncelappConfig',
+    'corsheaders',
+    'cloudinary'
+
+]
+
 MIDDLEWARE = [
     
     'django.middleware.security.SecurityMiddleware',
@@ -169,6 +167,11 @@ USE_L10N = True
 
 USE_TZ = True
 
+cloudinary.config(
+    cloud_name='dlzyg12i7',
+    api_key='755948595873632',
+    api_secret='SXz0A7wV1NkRoDpmLN0wFi5PcRM',
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

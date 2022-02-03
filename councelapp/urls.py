@@ -1,16 +1,24 @@
-from django.conf import settings
-from django.conf.urls.static import static
-from django.urls import path,re_path
+from unicodedata import name
+from urllib.parse import uses_relative
+from django.urls import path
+from councelapp import views as user_views
 from rest_framework.authtoken import views
-from . import views
+from rest_framework.authtoken import views as special_views
 
+from .views import *
 
-
-
-urlpatterns=[
-    path('clients/', views.ClientsApi.as_view()),
-    path('groups/', views.GroupsApi.as_view()),
-    re_path(r'^client/client-id/(?P<pk>[0-9]+)$', views.ClientApi.as_view()),
-    re_path(r'^group/group-id/(?P<pk>[0-9]+)$', views.GroupApi.as_view()),
-    re_path(r'^counselling/counselling-id/(?P<pk>[0-9]+)$', views.CounsellingApi.as_view()),
+urlpatterns = [
+    path('counsellor_details',user_views.CounsellorView,name='counsellor'),
+    path('current_date',user_views.current_date,name="date"),
+    path('counsellors',user_views.get_counsellors,name="counsellors"),
+    path('get_counsellor',user_views.clients_counsellor,name="get_counsellor"),
+    path('join_counsellor/<int:pk>',user_views.join_counsellor,name='join_counsellor'),
+    path('counsellor_profile',user_views.counsellor_profile,name='profile'),
+    path('client_profile',user_views.profile,name="client_profile"),
+    path('client_group',user_views.get_group,name='get_group'),
+    path('join_group/<int:pk>',user_views.join_group,name="join_group"),
+    path('group_view',user_views.group_view,name='counsellor_groups'),
+    path('messages',MessageAPIView.as_view()),
+    path('group_chat/<int:pk>',user_views.group_chat,name="group_chat"),
+    path('join_counsellor/<int:pk>',user_views.join_counsellor,name="join_counsellor")
 ]

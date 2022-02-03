@@ -1,80 +1,91 @@
 from rest_framework import serializers
-from .models import ClientProfile, Group
-from .models import *
-from counsel_users.serializers import UserSerializers
+from councelapp.models import *
 
-from counsel_users.serializers import UserSerializers
+from counsel_users.serializers import UserSerializer
 
 class CounsellorSerializer(serializers.Serializer):
-    account = UserSerializers(read_only=True)
+    user = UserSerializer(read_only=True)
     class Meta:
         model = Counsellor
-        fields = ['first_name','last_name','qualities','work_experience']
+        fields = ['profile_pic']
 
     def save(self,request):
-        counsellor = Counsellor(account= request.user,first_name=self.validated_data['first_name'],last_name = self.validated_data['last_name'],qualities = self.validated_data['qualities'],work_experience = self.validated_data['work_experience'])
+        counsellor = Counsellor(user = request.user,profile_pic=self.validated_data['profile_pic'])
         counsellor.save()
         return counsellor 
 
-class CounsellorProfileSerializer(serializers.ModelSerializer):
-    details = CounsellorSerializer(read_only=True)
-    user = UserSerializers(read_only=True)
+class DetailsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Counsellor
-        fields = '__all__'
-
-class ClientSerializer(serializers.ModelSerializer):
-    groups = serializers.PrimaryKeyRelatedField(many=True, queryset=Group.objects.all())
-    class Meta:
-        model = ClientProfile
-        fields = ('id', 'first_name', 'last_name', 'age', 'tel_no', 'groups', 'profile_picture')
-
-
-class GroupSerializer(serializers.ModelSerializer):
-    user = UserSerializers(read_only=True)
-    class Meta:
-        model = Group
+        model = Details
         fields = '__all__'
 
     def save(self,request):
-        group = Group(name=self.validated_data['name'],admin=request.user,bio=self.validated_data['bio'])
+        details = Details(first_name = self.validated_data['first_name'],last_name = self.validated_data['last_name'],qualities = self.validated_data['qualities'],experiences = self.validated_data['experiences'])
+        details.save()
+        return details
+
+class GetCounsellorSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only = True)
+    details = DetailsSerializer(read_only = True)
+    class Meta:
+        model = Counsellor
+        fields = '__all__'
+        
+
+class CounsellorProfileSerializer(serializers.ModelSerializer):
+    details = CounsellorSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
+    class Meta:
+        model = Counsellor
+        fields = '__all__'
+    
+    def save(self,request):
+        pic = Counsellor
+    
+        
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+            model = Group
+            fields = '__all__'
+            read_only_fields = ['admin']
+
+    def save(self,request):
+        print(request.user)
+        group = Group(name = self.validated_data['name'],admin = request.user,bio = self.validated_data['bio'])
         group.save()
 
-
-class ConversationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Conversation
-        fields = '__all__'
-
-
-class MessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Message
-        fields = '__all__'
-
-
-class CounsellingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Counselling
-        fields = '__all__'
-
-
 class GetGroupSerializer(serializers.ModelSerializer):
-    admin = UserSerializers()
+    """This deals with parsing the neighbourhood model
+    Args:
+        serializers ([type]): [description]
+    """
+    admin = UserSerializer()
    
     class Meta:
         model = Group
         fields = '__all__'
         read_only_fields = ['admin']
 
-
-class CounselorProfileSerializer(serializers.HyperlinkedModelSerializer):
+class ClientProfileSerializer(serializers.ModelSerializer):
+    counsellor = CounsellorProfileSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
+    group = GroupSerializer(read_only=True)
     class Meta:
-        model = CounselorProfile
-        fields = ("id", "url","counselor", "bio","profile_pic")
+        model = Client
+        fields = '__all__'
 
-class CounselorSerializer(serializers.HyperlinkedModelSerializer):
+
+
+
+
+class GroupChatSerializer(serializers.ModelSerializer):
+    group = GroupSerializer(read_only=True)
+    reporter = UserSerializer(read_only=True)
     class Meta:
-        model =Counsellor
-        fields = ("id", "url", "user","first_name","last_name", "experience","qualities")
-        
+        model = GroupChat
+        fields = '__all__'
+
+    def save(self,request,group):
+        groupchat = GroupChat(group = group,reporter = request.user,text = self.validated_data['text'])
+        groupchat.save()

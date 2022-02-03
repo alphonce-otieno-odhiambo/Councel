@@ -1,30 +1,16 @@
-from django.shortcuts import get_object_or_404
-from django.contrib import messages
-from django.contrib.auth.models import User
-from rest_framework import viewsets, permissions
-from .serializers import *
-from .forms import *
-from django.http.response import HttpResponseRedirect
-from .models import *
-from django.http import Http404, JsonResponse
-from django.core.exceptions import ObjectDoesNotExist
-
-from rest_framework.response import Response 
-from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
+from datetime import datetime
+from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework import status
+import datetime
 
-from django.http import HttpResponse
-from django.views.generic.base import TemplateView
-from django.core.mail import EmailMessage, message
-from django.views.generic import ListView
-from django.template import Context
-
+from .serializers import *
+from .pusher import pusher_client
 from counsel_users.models import Account
 
 # Create your views here.
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def CounsellorView(request):
@@ -48,6 +34,12 @@ def CounsellorView(request):
         data['response'] = 'There is no counsellor registered under those credentials'
         return Response(data,status=status.HTTP_404_NOT_FOUND)
     
+@api_view(['GET'])
+def current_date(request):
+    current_date = datetime.datetime.now()
+    print(current_date)
+    return Response(current_date,status = status.HTTP_200_OK)
+
 @api_view(['GET'])   
 def counsellor_profile(request):
     data = {}
@@ -66,132 +58,122 @@ def profile(request):
 
 
 @api_view(['POST','GET'])
-def counsellor_group_view(request):
+def group_view(request):
     data = {}
+
+    if request.method == 'GET':
+        groups = Group.objects.all()
+        data['groups'] = GetGroupSerializer(groups,many=True).data
+
+        return Response(data,status = status.HTTP_200_OK)
 
     if request.method == 'POST':
         serializer = GroupSerializer(data=request.data)
-        if serializer.is_valid:
+        if serializer.is_valid():
             serializer.save(request)
             data['success'] = "The group has been created successfully"
             return Response(data,status = status.HTTP_201_CREATED)
         else:
             serializer.errors
+            print(serializer.errors)
             return Response(data,status=status.HTTP_400_BAD_REQUEST)
 
-    if request.method == 'GET':
-        groups = Group.objects.filter(group__admin = request.user)
-        data = GetGroupSerializer(groups,many=True).data
 
-        return Response(data,status = status.HTTP_200_OK)
+@api_view(['GET'])
+def get_counsellors(request):
+    data = {}
+    counsellors = Counsellor.objects.filter(user__is_counsellor = True)
+    data = GetCounsellorSerializer(counsellors,many=True).data
 
+    return Response(data,status.HTTP_200_OK)
 
-class ClientsApi(APIView):
-    def get(self, request, format = None):
-        all_clients = ClientProfile.objects.all()
-        serializers = ClientSerializer(all_clients, many=True)
-        return Response(serializers.data)
+@api_view(["GET"])
+def clients_counsellor(request):
+    data = {}
+    client = Client.objects.get(user=request.user)
+    print(client.counsellor)
+    data = ClientProfileSerializer(client).data
+    return Response(data,status = status.HTTP_200_OK)
 
-    def post(self, request, format = None):
-        serializers = ClientSerializer(data=request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response(serializers.data, status=status.HTTP_201_CREATED)
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+def join_counsellor(request,pk):
+    data = {}
 
+    client = Client.objects.get(user = request.user)
+    new_counsellor = Counsellor.objects.get(pk=pk)
+    client.counsellor = new_counsellor
+    client.save()
+    data['success'] = f"Congratulations.{new_counsellor.username} is now your counsellor."
+    return Response(data,status = status.HTTP_200_OK)
 
-class ClientApi(APIView):
-    def get_client(self, pk):
-        try:
-            return ClientProfile.objects.get(pk=pk)
-        except ClientProfile.DoesNotExist:
-            return Http404
+@api_view(['POST'])
+def join_counsellor(request,pk):
+    data = {}
 
-    def get(self, request, pk, format = None):
-        client = self.get_client(pk)
-        serializers = ClientSerializer(client)
-        return Response(serializers.data)
+    client = Client.objects.get(user = request.user)
+    new_counsellor = Counsellor.objects.get(pk=pk)
+    client.counsellor = new_counsellor
+    client.save()
+    data['success'] = f"Thank you for joining {new_counsellor.user.username}."
+    return Response(data,status = status.HTTP_200_OK)
 
-    def put (self, request, pk, format = None):
-        client = self.get_client(pk)
-        serializers = ClientSerializer(client, request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response(serializers.data)
+@api_view(['GET'])
+def get_group(request):
+    client = Client.objects.get(user=request.user)
+    print(client.group)
+    data = ClientProfileSerializer(client).data
+    return Response(data,status = status.HTTP_200_OK) 
+
+@api_view(['POST'])
+def join_group(request,pk):
+    data = {}
+
+    client = Client.objects.get(user = request.user)
+    new_group = Group.objects.get(pk=pk)
+    client.group = new_group
+    client.save()
+    data['success'] = f"Welcome to {new_group.name}" 
+    return Response(data,status = status.HTTP_200_OK)
+
+@api_view(['GET','POST'])
+def group_chat(request,pk):
+    data = {}
+
+    try:
+        group = Group.objects.get(pk=pk)
+    except :
+
+        data['not found'] = "The group was not found"
+        return Response(data,status = status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'POST':
+        serializer = GroupChatSerializer(data = request.data)
+
+        if serializer.is_valid():
+            serializer.save(request,group)
+            data['success'] = "The message was successfully sent"
+            return Response(data,status = status.HTTP_200_OK)
+
         else:
-            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+            data = serializer.errors
+            print(data)
+            return Response(data,status = status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format = None):
-        client = self.get_client(pk)
-        client.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    elif request.method == 'GET':
+        messages = GroupChat.get_messages(pk)
+        data = GroupChatSerializer(messages,many=True).data
 
-
-
-class GroupsApi(APIView):
-    def get(self, request, format = None):
-        all_groups = Group.objects.all()
-        serializers = GroupSerializer(all_groups, many=True)
-        return Response(serializers.data)
-
-    def post(self, request, format = None):
-        serializers = GroupSerializer(data=request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response(serializers.data, status=status.HTTP_201_CREATED)
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data,status= status.HTTP_200_OK)
 
 
-class GroupApi(APIView):
-    def get_group(self, pk):
-        try:
-            return Group.objects.get(pk=pk)
-        except Group.DoesNotExist:
-            return Http404
+class MessageAPIView(APIView):
 
-    def get(self, request, pk, format = None):
-        group = self.get_group(pk)
-        serializers = GroupSerializer(group)
-        return Response(serializers.data)
+    def post(self, request):
+        pusher_client.trigger('chat', 'message', {
+            'message':request.data['message']
+        })
 
-    def put (self, request, pk, format = None):
-        group = self.get_group(pk)
-        serializers = GroupSerializer(group, request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response(serializers.data)
-        else:
-            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format = None):
-        group = self.get_group(pk)
-        group.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response([])
 
 
-
-class CounsellingApi(APIView):
-    def get_counselling(self, pk):
-        try:
-            return Counselling.objects.get(pk=pk)
-        except Counselling.DoesNotExist:
-            return Http404
-
-    def get(self, request, pk, format = None):
-        counselling = self.get_counselling(pk)
-        serializers = CounsellingSerializer(counselling)
-        return Response(serializers.data)
-
-    def put (self, request, pk, format = None):
-        counselling = self.get_counselling(pk)
-        serializers = CounsellingSerializer(counselling, request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response(serializers.data)
-        else:
-            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format = None):
-        counselling = self.get_counselling(pk)
-        counselling.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+            

@@ -24,11 +24,7 @@ urlpatterns = [
     path('',include('councelapp.urls')),
     path('api_auth',include('rest_framework.urls')),
     path('accounts/',include('counsel_users.urls')),
-    path('',include('counsel_users.urls')),
-    path('api-auth/', include('rest_framework.urls')),
-    path('api/token/',TokenObtainPairView.as_view()),
-    path('api/token/refresh/',TokenRefreshView.as_view()),
-    path("", include("councelapp.urls"))
+    path('counsultion/',include('councelapp.urls'))
 ]
 
 

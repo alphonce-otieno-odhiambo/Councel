@@ -1,6 +1,8 @@
+import profile
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,PermissionsMixin
 from django.conf import settings
+from cloudinary.models import CloudinaryField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
@@ -40,12 +42,25 @@ class MyAccountManager(BaseUserManager):
 
         user.save(using=self._db)
         return user
+
+    def create_counsellor(self,email,username,password=None):
+        user = self.model(
+            email = self.normalize_email(email),
+            username = username,
+            password = password
+        )
+        user.set_password(password)
+        user.is_counsellor = True
+        user.save(using=self._db)
+        return user
+        
     
 class Account(PermissionsMixin,AbstractBaseUser):
     """This will define the custom user model to be used
     Args:
         AbstractBaseUser ([type]): [description]
     """
+    profile_pic = CloudinaryField(blank=True,null=True)
     email = models.EmailField(verbose_name="email",max_length=100,unique=True)
     username = models.CharField(max_length=100,unique=True)
     date_joined = models.DateTimeField(verbose_name="date joined",auto_now_add=True)
@@ -54,8 +69,8 @@ class Account(PermissionsMixin,AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    counsellor = models.BooleanField(default=False)
-
+    is_counsellor = models.BooleanField(default=False)
+    
     objects = MyAccountManager()
 
     USERNAME_FIELD = 'email'
