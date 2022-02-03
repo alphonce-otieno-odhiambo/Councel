@@ -79,7 +79,7 @@ class CounselorProfile(models.Model):
     @receiver(post_save, sender=Account)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            Client.objects.create(user=instance)
+            ClientProfile.objects.create(user=instance)
 
 class Counselling(models.Model):
 	counsellor = models.ForeignKey(Counsellor, on_delete=models.CASCADE, null=True)
