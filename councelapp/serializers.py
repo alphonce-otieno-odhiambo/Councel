@@ -1,3 +1,5 @@
+from dataclasses import field
+from pyexpat import model
 from rest_framework import serializers
 from councelapp.models import *
 
@@ -42,7 +44,14 @@ class CounsellorProfileSerializer(serializers.ModelSerializer):
     def save(self,request):
         pic = Counsellor
     
-        
+class ProfilePicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ['profile_pic']
+
+    def save(self,request):
+        profile_pic = Account(profile_pic = self.validated_data['profile_pic'])
+        return profile_pic
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -76,9 +85,6 @@ class ClientProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-
-
 class GroupChatSerializer(serializers.ModelSerializer):
     group = GroupSerializer(read_only=True)
     reporter = UserSerializer(read_only=True)
@@ -89,3 +95,17 @@ class GroupChatSerializer(serializers.ModelSerializer):
     def save(self,request,group):
         groupchat = GroupChat(group = group,reporter = request.user,text = self.validated_data['text'])
         groupchat.save()
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    class Meta:
+        model = Appointment
+        fields = '__all__'
+        read_only_fields = ['user']
+
+    def save(self,request):
+        appointment = Appointment(user = request.user, date = self.validated_data['date'],topic = self.validated_data['topic'])
+        appointment.save()
+
+    
+    

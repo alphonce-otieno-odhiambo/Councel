@@ -6,13 +6,13 @@ from .models import Account,MyAccountManager
 class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ['email','password','username']
+        fields = ['email','password','username','profile_pic']
         extra_kwargs = {
             'password':{'write_only':True}
         }
 
     def save(self):
-        account = Account(email=self.validated_data['email'],username = self.validated_data['username'],is_counsellor = False)
+        account = Account(email=self.validated_data['email'],username = self.validated_data['username'],is_counsellor = False,profile_pic=self.validated_data['profile_pic'])
         account.set_password(self.validated_data['password'])
         print(account.is_counsellor)
         account.save()
@@ -36,13 +36,13 @@ class PicSerializer(serializers.ModelSerializer):
 class CounsellorRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ['email','password','username','is_counsellor']
+        fields = ['email','password','username','is_counsellor','profile_pic']
         extra_kwargs = {
             'password':{'write_only':True}
         }
 
     def save(self):
-        account = Account(email=self.validated_data['email'],username = self.validated_data['username'],is_counsellor = True)
+        account = Account(email=self.validated_data['email'],username = self.validated_data['username'],is_counsellor = True,profile_pic=self.validated_data['profile_pic'])
         account.set_password(self.validated_data['password'])
         account.save()
         print(account.is_counsellor)

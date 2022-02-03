@@ -21,5 +21,8 @@ urlpatterns = [
     path('group_view',user_views.group_view,name='counsellor_groups'),
     path('messages',MessageAPIView.as_view()),
     path('group_chat/<int:pk>',user_views.group_chat,name="group_chat"),
-    path('join_counsellor/<int:pk>',user_views.join_counsellor,name="join_counsellor")
+    path('join_counsellor/<int:pk>',user_views.join_counsellor,name="join_counsellor"),
+    path('appointment',user_views.appointment_view,name="appointment"),
+    path('get_appointment',user_views.get_appointment,name="get_appointments"),
+    path('profile_pic',user_views.profile_pic,name="profile_pic")
 ]

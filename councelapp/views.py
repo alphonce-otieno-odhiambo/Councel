@@ -190,5 +190,41 @@ class MessageAPIView(APIView):
 
         return Response([])
 
+@api_view(['POST','GET'])
+def appointment_view(request):
+    data = {}
 
-            
+    if request.method == 'GET':
+        appointments = Appointment.objects.all()
+        data['appointments'] = AppointmentSerializer(appointments,many=True).data
+
+        return Response(data,status = status.HTTP_200_OK)
+
+    if request.method == 'POST':
+        serializer = AppointmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(request)
+            data['success'] = "The appointment has been created successfully"
+            return Response(data,status = status.HTTP_201_CREATED)
+        else:
+            serializer.errors
+            print(serializer.errors)
+            return Response(data,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_appointment(request):
+    data = {}
+   
+    appointments = Appointment.objects.all()
+    data['appointments'] = AppointmentSerializer(appointments,many=True).data
+    return Response(data,status = status.HTTP_200_OK)
+
+@api_view(['POST'])
+def profile_pic(request):
+    data = {}
+
+    serializer = ProfilePicSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(request)
+        data['success'] = "The pic has been posted successfully"
+        return Response(data,status = status.HTTP_201_CREATED)

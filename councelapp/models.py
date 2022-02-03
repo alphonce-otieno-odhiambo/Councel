@@ -92,3 +92,26 @@ class Client(models.Model):
         clients = Client.objects.filter(counsellor = counsellor)
 
         return clients
+
+class Appointment(models.Model):
+    user = models.ForeignKey(Account,on_delete=CASCADE,null=True)
+    date = models.DateField()
+    topic = models.TextField()
+
+    def delete_appointment(self):
+        """This deletes the image from the database using its pk
+        Args:
+            id ([type]): [description]
+        """
+        self.delete()
+
+    def get_appointments():
+        """This will return all users in a given neighbourhood
+        Args:
+            pk ([type]): [description]
+        Returns:
+            [type]: [description]
+        """
+        appointments = Appointment.objects.filter(client__counsellor = counsellor)
+
+        return appointments
