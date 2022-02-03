@@ -88,3 +88,37 @@ class Client(models.Model):
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
 
+    def get_clients(pk):
+        """This will return all users in a given neighbourhood
+        Args:
+            pk ([type]): [description]
+        Returns:
+            [type]: [description]
+        """
+        counsellor = Counsellor.objects.get(pk=pk)
+        clients = Client.objects.filter(counsellor = counsellor)
+
+        return clients
+
+class Appointment(models.Model):
+    user = models.ForeignKey(Account,on_delete=CASCADE,null=True)
+    date = models.DateField()
+    topic = models.TextField()
+
+    def delete_appointment(self):
+        """This deletes the image from the database using its pk
+        Args:
+            id ([type]): [description]
+        """
+        self.delete()
+
+    def get_appointments():
+        """This will return all users in a given neighbourhood
+        Args:
+            pk ([type]): [description]
+        Returns:
+            [type]: [description]
+        """
+        appointments = Appointment.objects.filter(client__counsellor = counsellor)
+
+        return appointments

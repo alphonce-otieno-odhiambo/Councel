@@ -7,5 +7,6 @@ admin.site.register(Counsellor)
 admin.site.register(Client)
 admin.site.register(Details)
 admin.site.register(GroupChat)
+admin.site.register(Appointment)
 
 

@@ -51,9 +51,9 @@ def counsellor_profile(request):
 @api_view(['GET'])
 def profile(request):
     data = {}
-    profile = Counsellor.objects.get(user = request.user)
+    profile = Client.objects.get(user = request.user)
     print(profile.user.date_joined)
-    data =  CounsellorProfileSerializer(profile).data
+    data =  ClientProfileSerializer(profile).data
     return Response(data,status = status.HTTP_200_OK)
 
 
@@ -94,6 +94,21 @@ def clients_counsellor(request):
     print(client.counsellor)
     data = ClientProfileSerializer(client).data
     return Response(data,status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+
+def get_clients(request,pk):
+    """
+    This parses the request to get the users in a certain neighbourhood
+    Args:
+        request ([type]): [description]
+        pk ([type]): [description]
+    """
+    data = {}
+    clients = Client.get_clients(pk)
+    data['clients'] = ClientProfileSerializer(clients,many=True).data
+    return Response(data,status = status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 def join_counsellor(request,pk):
@@ -175,5 +190,41 @@ class MessageAPIView(APIView):
 
         return Response([])
 
+@api_view(['POST','GET'])
+def appointment_view(request):
+    data = {}
 
-            
+    if request.method == 'GET':
+        appointments = Appointment.objects.all()
+        data['appointments'] = AppointmentSerializer(appointments,many=True).data
+
+        return Response(data,status = status.HTTP_200_OK)
+
+    if request.method == 'POST':
+        serializer = AppointmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(request)
+            data['success'] = "The appointment has been created successfully"
+            return Response(data,status = status.HTTP_201_CREATED)
+        else:
+            serializer.errors
+            print(serializer.errors)
+            return Response(data,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_appointment(request):
+    data = {}
+   
+    appointments = Appointment.objects.all()
+    data['appointments'] = AppointmentSerializer(appointments,many=True).data
+    return Response(data,status = status.HTTP_200_OK)
+
+@api_view(['POST'])
+def profile_pic(request):
+    data = {}
+
+    serializer = ProfilePicSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(request)
+        data['success'] = "The pic has been posted successfully"
+        return Response(data,status = status.HTTP_201_CREATED)
